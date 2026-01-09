@@ -17,6 +17,19 @@ export const FacilityCalendarModal: React.FC<FacilityCalendarModalProps> = ({ fa
     const { t, language } = useLanguage();
     const [currentMonth, setCurrentMonth] = useState(new Date());
 
+    // Prevent background scrolling when modal is open
+    React.useEffect(() => {
+        if (isOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+
+        return () => {
+            document.body.style.overflow = '';
+        };
+    }, [isOpen]);
+
     // Always call hook (rules of hooks), but data is relevant only if facilityId exists
     // We pass a dummy ID if null, but prevent rendering
     const validFacilityId = facilityId || 'library';
@@ -65,8 +78,8 @@ export const FacilityCalendarModal: React.FC<FacilityCalendarModalProps> = ({ fa
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200" onClick={onClose}>
-            <div className="w-full max-w-md bg-calm-bg rounded-2xl shadow-xl overflow-hidden border border-white/20 animate-in zoom-in-95 duration-200 flex flex-col max-h-[85vh]" onClick={e => e.stopPropagation()}>
+        <div className="fixed inset-0 z-[100] flex items-center justify-center sm:items-center items-end p-0 sm:p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200" onClick={onClose}>
+            <div className="w-full sm:max-w-md bg-calm-bg rounded-t-2xl sm:rounded-2xl shadow-xl overflow-hidden border-t sm:border border-white/20 animate-in slide-in-from-bottom-10 sm:zoom-in-95 duration-200 flex flex-col max-h-[75vh] sm:max-h-[85vh] safe-pb" onClick={e => e.stopPropagation()}>
                 {/* Header Section (Fixed) */}
                 <div className="flex-none bg-calm-bg z-10 relative">
                     <div className="p-4 border-b border-gray-100 flex items-center justify-between">
@@ -153,105 +166,6 @@ export const FacilityCalendarModal: React.FC<FacilityCalendarModalProps> = ({ fa
                             })}
                         </div>
 
-                        {/* Legend */}
-                        <div className="mt-4 flex flex-wrap gap-4 text-xs justify-center border-t border-slate-100 pt-3">
-                            {facilityId === 'library' ? (
-                                <>
-                                    <div className="flex items-center gap-1.5">
-                                        <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 ring-1 ring-emerald-100" />
-                                        <span className="text-calm-text font-medium">9:00-20:00</span>
-                                    </div>
-                                    <div className="flex items-center gap-1.5">
-                                        <span className="w-2.5 h-2.5 rounded-full bg-sky-400 ring-1 ring-sky-100" />
-                                        <span className="text-calm-text font-medium">13:00-20:00</span>
-                                    </div>
-                                    <div className="flex items-center gap-1.5">
-                                        <span className="w-2.5 h-2.5 rounded-full bg-amber-400 ring-1 ring-amber-100" />
-                                        <span className="text-calm-text font-medium">9:00-17:00</span>
-                                    </div>
-                                    <div className="flex items-center gap-1.5">
-                                        <span className="w-2.5 h-2.5 rounded-full bg-slate-300 ring-1 ring-slate-100" />
-                                        <span className="text-slate-500 font-medium">{t('status.closed')}</span>
-                                    </div>
-                                </>
-                            ) : facilityId === 'store' ? (
-                                <>
-                                    <div className="flex items-center gap-1.5">
-                                        <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 ring-1 ring-emerald-100" />
-                                        <span className="text-calm-text font-medium">11:00-16:30</span>
-                                    </div>
-                                    <div className="flex items-center gap-1.5">
-                                        <span className="w-2.5 h-2.5 rounded-full bg-amber-400 ring-1 ring-amber-100" />
-                                        <span className="text-calm-text font-medium">11:00-15:00</span>
-                                    </div>
-                                    <div className="flex items-center gap-1.5">
-                                        <span className="w-2.5 h-2.5 rounded-full bg-sky-400 ring-1 ring-sky-100" />
-                                        <span className="text-calm-text font-medium">11:30-13:00</span>
-                                    </div>
-                                    <div className="flex items-center gap-1.5">
-                                        <span className="w-2.5 h-2.5 rounded-full bg-indigo-400 ring-1 ring-indigo-100" />
-                                        <span className="text-calm-text font-medium">11:30-14:30</span>
-                                    </div>
-                                    <div className="flex items-center gap-1.5">
-                                        <span className="w-2.5 h-2.5 rounded-full bg-slate-300 ring-1 ring-slate-100" />
-                                        <span className="text-slate-500 font-medium">{t('status.closed')}</span>
-                                    </div>
-                                </>
-                            ) : facilityId === 'cafeteria_1f' ? (
-                                <>
-                                    <div className="flex items-center gap-1.5">
-                                        <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 ring-1 ring-emerald-100" />
-                                        <span className="text-calm-text font-medium">11:00-14:30</span>
-                                    </div>
-                                    <div className="flex items-center gap-1.5">
-                                        <span className="w-2.5 h-2.5 rounded-full bg-amber-400 ring-1 ring-amber-100" />
-                                        <span className="text-calm-text font-medium">11:00-13:30</span>
-                                    </div>
-                                    <div className="flex items-center gap-1.5">
-                                        <span className="w-2.5 h-2.5 rounded-full bg-sky-400 ring-1 ring-sky-100" />
-                                        <span className="text-calm-text font-medium">11:30-13:00</span>
-                                    </div>
-                                    <div className="flex items-center gap-1.5">
-                                        <span className="w-2.5 h-2.5 rounded-full bg-indigo-400 ring-1 ring-indigo-100" />
-                                        <span className="text-calm-text font-medium">11:30-13:30</span>
-                                    </div>
-                                    <div className="flex items-center gap-1.5">
-                                        <span className="w-2.5 h-2.5 rounded-full bg-slate-300 ring-1 ring-slate-100" />
-                                        <span className="text-slate-500 font-medium">{t('status.closed')}</span>
-                                    </div>
-                                </>
-                            ) : facilityId === 'sabor_2f' ? (
-                                <>
-                                    <div className="flex items-start gap-1.5 max-w-[90%]">
-                                        <span className="w-2.5 h-2.5 rounded-full bg-amber-400 ring-1 ring-amber-100 flex-shrink-0 mt-1" />
-                                        <span className="text-calm-text font-medium leading-tight">
-                                            11:00-13:00（食事メニュー提供)
-                                            <br />
-                                            11:00-14:30（焼き立てパン販売）
-                                        </span>
-                                    </div>
-                                    <div className="flex items-center gap-1.5">
-                                        <span className="w-2.5 h-2.5 rounded-full bg-slate-300 ring-1 ring-slate-100 flex-shrink-0" />
-                                        <span className="text-slate-500 font-medium">{t('status.closed')}</span>
-                                    </div>
-                                </>
-                            ) : (
-                                <>
-                                    <div className="flex items-center gap-1.5">
-                                        <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 ring-1 ring-emerald-100" />
-                                        <span className="text-calm-text font-medium">{t('status.open')} (Standard)</span>
-                                    </div>
-                                    <div className="flex items-center gap-1.5">
-                                        <span className="w-2.5 h-2.5 rounded-full bg-rose-400 ring-1 ring-rose-100" />
-                                        <span className="text-calm-text font-medium">Irregular / Short</span>
-                                    </div>
-                                    <div className="flex items-center gap-1.5">
-                                        <span className="w-2.5 h-2.5 rounded-full bg-slate-300 ring-1 ring-slate-100" />
-                                        <span className="text-slate-500 font-medium">{t('status.closed')}</span>
-                                    </div>
-                                </>
-                            )}
-                        </div>
                     </div>
                 </div>
             </div>
