@@ -104,6 +104,18 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
                                 <Info size={18} />
                                 <span className="text-sm font-bold">About App</span>
                             </button>
+
+                            {/* Feedback */}
+                            <a
+                                href="https://forms.gle/uh138thkJKN5MNdy6"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-white/60 transition-colors text-left text-calm-text hover:text-accent"
+                                onClick={() => setIsMenuOpen(false)}
+                            >
+                                <MessageSquare size={18} />
+                                <span className="text-sm font-bold">Feedback</span>
+                            </a>
                         </div>
                     )}
                 </div>
@@ -112,18 +124,6 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
             <main className="relative z-10 p-4 pb-10 max-w-7xl mx-auto w-full">
                 {children}
             </main>
-
-            <footer className="relative z-10 p-6 text-center pb-24">
-                <a
-                    href="https://forms.gle/uh138thkJKN5MNdy6"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 text-calm-subtext hover:text-accent transition-colors text-sm font-medium"
-                >
-                    <MessageSquare size={16} />
-                    フィードバックを送る
-                </a>
-            </footer>
 
             <AboutModal
                 isOpen={isAboutOpen}
