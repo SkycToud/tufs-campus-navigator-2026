@@ -14,7 +14,7 @@ interface FacilityCalendarModalProps {
 }
 
 export const FacilityCalendarModal: React.FC<FacilityCalendarModalProps> = ({ facilityId, isOpen, onClose }) => {
-    const { t, language } = useLanguage();
+    const { language } = useLanguage();
     const [currentMonth, setCurrentMonth] = useState(new Date());
 
     // Prevent background scrolling when modal is open
