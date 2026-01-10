@@ -61,6 +61,11 @@ export const translations: Record<string, Record<Language, string>> = {
     'about.last_updated': { ja: 'データ最終更新日', en: 'Data Last Updated' },
     'about.stale_warning': { ja: '※古い情報が含まれている可能性があります', en: '※Data may be outdated' },
     'about.official_links': { ja: '公式サイト', en: 'Official Links' },
+
+    // Maintenance
+    'maintenance.title': { ja: 'サービス一時停止中', en: 'Service Temporarily Suspended' },
+    'maintenance.text': { ja: '現在、データの調整中のためサービスを一時停止しています。正確な情報は公式サイトを確認してください。', en: 'The service is currently suspended for data adjustment. Please check the official website for accurate information.' },
+    'maintenance.official_site': { ja: '公式サイトを確認', en: 'Check Official Website' },
     'about.coop': { ja: '大学生協 (営業時間)', en: 'University Co-op' },
     'about.admin_calendar': { ja: '大学・教務・事務窓口', en: 'University Admin Calendar' },
     // Header Menu

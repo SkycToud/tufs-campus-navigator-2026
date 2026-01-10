@@ -122,7 +122,7 @@ export const AboutModal: React.FC<AboutModalProps> = ({ isOpen, onClose }) => {
                             </p>
                         )}
                         <p className="text-xs text-slate-400">
-                            たふスケチーム
+                            たふスケ運営チーム
                         </p>
                     </div>
                 </div>
