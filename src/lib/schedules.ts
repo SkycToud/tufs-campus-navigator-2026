@@ -29,6 +29,7 @@ export type FacilityData = {
     category: 'facility' | 'admin';
     rules: ScheduleRule[];
     exceptions?: Record<string, { status: 'closed' | 'open'; reason?: string; hours?: { start: string; end: string }[] }>;
+    unpublishedFrom?: string; // YYYY-MM-DD
 };
 
 // Helper Functions
@@ -83,6 +84,7 @@ export const CONST_SCHEDULE_DATA: Record<FacilityId, FacilityData> = {
         name: '附属図書館',
         nameEn: 'TUFS Library',
         category: 'facility',
+        unpublishedFrom: '2026-03-01',
         rules: [
             Rules.closedRange('2026-01-01', '2026-01-04', '年始休館'),
             Rules.date('2026-01-05', HO.DEFAULT, '授業再開'),
@@ -129,6 +131,7 @@ export const CONST_SCHEDULE_DATA: Record<FacilityId, FacilityData> = {
         name: '1階食堂ミール',
         nameEn: 'Cafeteria Meal (1F)',
         category: 'facility',
+        unpublishedFrom: '2026-03-01',
         rules: [
             Rules.closedRange('2026-01-01', '2026-01-04', '年始休業'),
             Rules.range('2026-01-05', '2026-01-06', HO.LUNCH_STD),
@@ -173,6 +176,7 @@ export const CONST_SCHEDULE_DATA: Record<FacilityId, FacilityData> = {
         name: '2階食堂さぼおる',
         nameEn: 'Cafeteria Sabor (2F)',
         category: 'facility',
+        unpublishedFrom: '2026-03-01',
         rules: [
             Rules.closedRange('2026-01-01', '2026-01-04', '年始休業'),
             Rules.range('2026-01-05', '2026-01-09', HO.LUNCH_STD, '11:00-13:00（食事メニュー提供）、11:00-14:30（焼き立てパン販売）'),
@@ -192,6 +196,7 @@ export const CONST_SCHEDULE_DATA: Record<FacilityId, FacilityData> = {
         name: '購買書籍部ハッチポッチ',
         nameEn: 'Co-op Store Hatchpotch',
         category: 'facility',
+        unpublishedFrom: '2026-03-01',
         rules: [
             Rules.closedRange('2026-01-01', '2026-01-04', '年始休業'),
             Rules.range('2026-01-05', '2026-01-06', HO.STORE_STD),
@@ -384,3 +389,5 @@ export const FACILITIES = Object.entries(CONST_SCHEDULE_DATA).map(([id, data]) =
 export const SCHEDULES: Record<FacilityId, ScheduleRule[]> = Object.fromEntries(
     Object.entries(CONST_SCHEDULE_DATA).map(([id, data]) => [id, data.rules])
 ) as Record<FacilityId, ScheduleRule[]>;
+
+export const DATA_LAST_UPDATED = '2026-01-10'; // YYYY-MM-DD

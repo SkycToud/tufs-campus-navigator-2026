@@ -14,7 +14,7 @@ interface FacilityCalendarModalProps {
 }
 
 export const FacilityCalendarModal: React.FC<FacilityCalendarModalProps> = ({ facilityId, isOpen, onClose }) => {
-    const { language } = useLanguage();
+    const { language, t } = useLanguage();
     const [currentMonth, setCurrentMonth] = useState(new Date());
 
     // Prevent background scrolling when modal is open
@@ -118,7 +118,18 @@ export const FacilityCalendarModal: React.FC<FacilityCalendarModalProps> = ({ fa
                         ))}
                     </div>
                     {/* Scrollable Content */}
-                    <div className="flex-1 overflow-y-auto p-4 scrollbar-thin scrollbar-thumb-slate-200 scrollbar-track-transparent">
+                    <div className="flex-1 overflow-y-auto p-4 scrollbar-thin scrollbar-thumb-slate-200 scrollbar-track-transparent relative">
+                        {/* Unpublished Overlay */}
+                        {CONST_SCHEDULE_DATA[facilityId]?.unpublishedFrom &&
+                            currentMonth >= new Date(CONST_SCHEDULE_DATA[facilityId].unpublishedFrom!) && (
+                                <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-white/60 backdrop-blur-[2px] p-6 text-center animate-in fade-in duration-300">
+                                    <div className="bg-white p-4 rounded-2xl shadow-lg border border-slate-100/50">
+                                        <p className="text-calm-subtext font-bold mb-1">{format(currentMonth, 'M月', { locale })}</p>
+                                        <p className="text-lg font-bold text-calm-text">{t('status.unpublished')}</p>
+                                    </div>
+                                </div>
+                            )}
+
                         <div className="grid grid-cols-7 gap-1">
                             {emptyCells.map((_, i) => (
                                 <div key={`empty-${i}`} />

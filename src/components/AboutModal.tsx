@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
+import { DATA_LAST_UPDATED } from '../lib/schedules';
 import { X, ExternalLink, Info } from 'lucide-react';
 
 interface AboutModalProps {
@@ -8,7 +9,7 @@ interface AboutModalProps {
 }
 
 export const AboutModal: React.FC<AboutModalProps> = ({ isOpen, onClose }) => {
-    const { t } = useLanguage();
+    const { t, language } = useLanguage();
     const modalRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -110,9 +111,18 @@ export const AboutModal: React.FC<AboutModalProps> = ({ isOpen, onClose }) => {
                         </div>
                     </div>
 
-                    <div className="pt-4 text-center">
+                    <div className="pt-4 text-center space-y-2">
+                        <div className="text-xs text-slate-500">
+                            {t('about.last_updated')}: {new Date(DATA_LAST_UPDATED).toLocaleDateString(language === 'ja' ? 'ja-JP' : 'en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                        </div>
+                        {/* Stale Data Warning (older than 1 month) */}
+                        {new Date() > new Date(new Date(DATA_LAST_UPDATED).setMonth(new Date(DATA_LAST_UPDATED).getMonth() + 1)) && (
+                            <p className="text-xs font-bold" style={{ color: '#ee5599' }}>
+                                {t('about.stale_warning')}
+                            </p>
+                        )}
                         <p className="text-xs text-slate-400">
-                            TUFS Campus Navigator 2026 (Beta)
+                            たふスケチーム
                         </p>
                     </div>
                 </div>
