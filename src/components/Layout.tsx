@@ -44,7 +44,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
                         <div
                             className="w-10 h-10"
                             style={{
-                                backgroundImage: 'url(/logo.png)',
+                                backgroundImage: 'url(/icon_v2.png)',
                                 backgroundSize: 'contain',
                                 backgroundPosition: 'center',
                                 backgroundRepeat: 'no-repeat'

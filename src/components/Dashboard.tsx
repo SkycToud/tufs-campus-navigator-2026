@@ -3,15 +3,12 @@ import { DateSelector } from './DateSelector';
 import { FacilityCard } from './FacilityCard';
 import { AdminAccordion } from './AdminAccordion';
 import { type FacilityId } from '../lib/schedules';
-import { useGlobalAlerts } from '../hooks/useGlobalAlerts';
 import { useLanguage } from '../contexts/LanguageContext';
 import { FacilityCalendarModal } from './FacilityCalendarModal';
 
 export const Dashboard: React.FC = () => {
     const [date, setDate] = useState(new Date());
     const { t } = useLanguage();
-    // Alerts hook usage (kept for reference, alerts are displayed within cards now mostly, or we could add a sticky banner)
-    useGlobalAlerts(date);
 
     const [selectedFacility, setSelectedFacility] = useState<FacilityId | null>(null);
 
@@ -26,6 +23,11 @@ export const Dashboard: React.FC = () => {
                 <section className="space-y-4">
                     <h2 className="text-sm font-bold text-calm-subtext uppercase tracking-wider pl-2">{t('section.main_facilities')}</h2>
                     <div className="grid gap-3">
+                        <FacilityCard
+                            facilityId="university_events"
+                            date={date}
+                            onClick={() => setSelectedFacility('university_events')}
+                        />
                         <FacilityCard
                             facilityId="lecture_bldg"
                             date={date}

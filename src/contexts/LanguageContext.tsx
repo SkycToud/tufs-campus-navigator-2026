@@ -53,7 +53,10 @@ export const translations: Record<string, Record<Language, string>> = {
     // About Page
     'about.title': { ja: 'アプリについて', en: 'About' },
     'about.disclaimer_title': { ja: '免責事項 (Beta版)', en: 'Disclaimer (Beta)' },
-    'about.disclaimer_text': { ja: '本アプリは開発中のベータ版です。表示される営業時間は公式サイトと異なる可能性があります。正確な情報は必ず各施設の公式サイトをご確認ください。', en: 'This is a beta version. Schedules may differ from official sources. Please verify with official websites.' },
+    'about.disclaimer_text': {
+        ja: '本アプリは個人が開発・運営する非公式のベータ版です。\n\nデータの正確性について: 本アプリは外部サイト（大学公式サイト等）のデータを参照し、独自のロジックで判定を行っています。そのため、元データが未公開の場合や、学事予定が急遽変更された場合、表示内容に誤りが生じる可能性が高いことをあらかじめご了承ください。\n\n公式サイトの確認: 重要な予定がある場合は、必ず各施設の公式サイトおよび掲示板を併せてご確認ください。\n\n責任の所在: 本アプリの利用により生じた不利益や損害について、開発者は一切の責任を負いかねます。',
+        en: 'This is an unofficial beta app.\n\nData Accuracy: This app determines schedules based on external data (official sites, etc.) using custom logic. Please note that errors may occur if original data is unpublished or schedules change suddenly.\n\nOfficial Verification: For important events, please always verify with official websites and bulletin boards.\n\nLiability: The developer assumes no responsibility for any disadvantages or damages arising from the use of this app.'
+    },
     'about.official_links': { ja: '公式サイト', en: 'Official Links' },
     'about.coop': { ja: '大学生協 (営業時間)', en: 'University Co-op' },
     'about.admin_calendar': { ja: '大学・教務・事務窓口', en: 'University Admin Calendar' },
@@ -63,6 +66,7 @@ export const translations: Record<string, Record<Language, string>> = {
     'menu.feedback': { ja: 'フィードバック・お問い合わせ', en: 'Feedback & Contacts' },
 
     // Student Procedures
+    'about.student_procedures': { ja: '学生窓口の事務受付時間', en: 'Student Office Hours' },
 
     // First Visit Modal
     'first_visit.title': { ja: 'ご利用前の確認', en: 'Important Notice' },

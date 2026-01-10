@@ -125,8 +125,30 @@ export const FacilityCalendarModal: React.FC<FacilityCalendarModalProps> = ({ fa
                             ))}
                             {schedule.map((day) => {
                                 const isCurrentDay = isToday(day.date);
-                                const colorClass = getColorClasses(day.info.color || 'gray');
-                                const dotClass = getDotColor(day.info.color || 'gray');
+
+                                // Custom Logic for University Events
+                                let colorClass, dotClass;
+                                if (facilityId === 'university_events') {
+                                    if (day.info.note) {
+                                        if (day.info.note.includes('履修')) {
+                                            // Highlight "Registration" events (Orange/Amber)
+                                            colorClass = "bg-amber-50/90 border-amber-200 text-amber-900";
+                                            dotClass = "bg-amber-500";
+                                        } else {
+                                            // All other events (Uniform Blue/Indigo)
+                                            colorClass = "bg-indigo-50/80 border-indigo-100/50 text-indigo-900";
+                                            dotClass = "bg-indigo-400";
+                                        }
+                                    } else {
+                                        // Empty days
+                                        colorClass = "bg-slate-50 border-slate-100 text-slate-400";
+                                        dotClass = "bg-slate-300 hidden"; // Hide dot for empty days
+                                    }
+                                } else {
+                                    // Standard Logic
+                                    colorClass = getColorClasses(day.info.color || 'gray');
+                                    dotClass = getDotColor(day.info.color || 'gray');
+                                }
 
                                 return (
                                     <div

@@ -60,7 +60,7 @@ export const AboutModal: React.FC<AboutModalProps> = ({ isOpen, onClose }) => {
                         <h3 className="text-sm font-bold text-amber-800 flex items-center gap-2">
                             {t('about.disclaimer_title')}
                         </h3>
-                        <p className="text-sm text-amber-700 leading-relaxed">
+                        <p className="text-sm text-amber-700 leading-relaxed whitespace-pre-wrap">
                             {t('about.disclaimer_text')}
                         </p>
                     </div>

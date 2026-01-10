@@ -1,7 +1,7 @@
 import { useFacilityStatus, type FacilityStatus } from '../hooks/useFacilityStatus';
 import { cn } from '../lib/utils';
 import { type FacilityId } from '../lib/schedules';
-import { Book, Coffee, Utensils, ShoppingBasket, GraduationCap, Building2, CreditCard, Printer, Users, School, Globe, Croissant } from 'lucide-react';
+import { Book, Coffee, Utensils, ShoppingBasket, GraduationCap, Building2, CreditCard, Printer, Users, School, Globe, Croissant, Calendar } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { CONST_SCHEDULE_DATA } from '../lib/schedules';
 
@@ -18,6 +18,7 @@ const ICON_MAP: Record<FacilityId, React.ElementType> = {
     lecture_bldg: School,
     agora_global: Globe,
     cafe_castalia: Croissant,
+    university_events: Calendar,
 };
 
 const STATUS_Styles: Record<FacilityStatus, { bg: string; text: string; dot: string; border: string }> = {
@@ -68,6 +69,33 @@ export const FacilityCard: React.FC<FacilityCardProps> = ({ facilityId, date, co
     }
 
     // Full Card
+    // Full Card
+    if (facilityId === 'university_events') {
+        const eventText = alert || '予定なし';
+
+        return (
+            <div
+                onClick={onClick}
+                className={cn(
+                    "glass p-4 rounded-2xl flex items-center gap-3 border shadow-sm transition-all hover:shadow-md border-indigo-100 bg-indigo-50/30",
+                    onClick && "cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
+                )}
+            >
+                <div className={cn("p-2.5 rounded-xl shrink-0 bg-indigo-100 text-indigo-600")}>
+                    <Icon size={24} />
+                </div>
+                <div className="min-w-0 flex-1">
+                    <div className="flex justify-between items-baseline mb-1">
+                        <h3 className="font-bold text-calm-text text-base leading-tight whitespace-normal break-words">{displayName}</h3>
+                    </div>
+                    <p className="text-sm font-semibold text-slate-700 break-words">
+                        {eventText === '予定なし' && language === 'en' ? 'No events' : eventText}
+                    </p>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div
             onClick={onClick}
@@ -87,9 +115,9 @@ export const FacilityCard: React.FC<FacilityCardProps> = ({ facilityId, date, co
 
                     </div>
                 </div>
-                <div className={cn("flex flex-none items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold border whitespace-nowrap", styles.bg, styles.text, styles.border)}>
-                    <span className={cn("w-2 h-2 rounded-full", status === 'open' && "animate-pulse", styles.dot)} />
-                    {statusText}
+                <div className={cn("flex flex-none items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold justify-end flex-wrap border", styles.bg, styles.text, styles.border)}>
+                    <span className={cn("w-2 h-2 rounded-full shrink-0", status === 'open' && "animate-pulse", styles.dot)} />
+                    <span className="whitespace-normal text-right">{statusText}</span>
                 </div>
             </div>
 

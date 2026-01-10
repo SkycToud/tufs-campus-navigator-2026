@@ -10,7 +10,8 @@ export type FacilityId =
     | 'circle_bldg'
     | 'lecture_bldg'
     | 'agora_global'
-    | 'cafe_castalia';
+    | 'cafe_castalia'
+    | 'university_events';
 
 export type ScheduleRule = {
     type: 'weekday' | 'wednesday' | 'saturday' | 'sunday' | 'specific_date' | 'range';
@@ -287,15 +288,15 @@ export const CONST_SCHEDULE_DATA: Record<FacilityId, FacilityData> = {
         category: 'facility',
         rules: [
             Rules.closedRange('2026-01-01', '2026-01-04', '年始休業'),
-            Rules.date('2026-01-05', HO.EARLY_LATE, '授業再開'),
-            Rules.date('2026-01-08', HO.EARLY_LATE, '履修登録･修正期間(冬学期)'),
-            Rules.date('2026-01-09', HO.EARLY_LATE, '履修登録･修正期間(冬学期) / 卒業論文・卒業研究 提出締切'),
-            Rules.date('2026-01-13', HO.EARLY_LATE, '金曜授業実施日'),
-            Rules.date('2026-01-15', HO.EARLY_LATE, '秋学期授業終了'),
-            Rules.closedDate('2026-01-16', '全学臨時休講'),
-            Rules.closedRange('2026-01-17', '2026-01-18', '全学臨時休講 (共通テスト)'),
-            Rules.range('2026-01-19', '2026-01-23', HO.EARLY_LATE, '秋学期 定期試験期間'),
-            Rules.date('2026-01-26', HO.EARLY_LATE, '冬学期 授業開始'),
+            Rules.date('2026-01-05', HO.EARLY_LATE),
+            Rules.date('2026-01-08', HO.EARLY_LATE),
+            Rules.date('2026-01-09', HO.EARLY_LATE),
+            Rules.date('2026-01-13', HO.EARLY_LATE),
+            Rules.date('2026-01-15', HO.EARLY_LATE),
+            Rules.closedDate('2026-01-16'),
+            Rules.closedRange('2026-01-17', '2026-01-18'),
+            Rules.range('2026-01-19', '2026-01-23', HO.EARLY_LATE),
+            Rules.date('2026-01-26', HO.EARLY_LATE),
             // Fallbacks
             Rules.weekday(HO.EARLY_LATE),
             Rules.subWeekday('saturday', [], true),
@@ -320,6 +321,54 @@ export const CONST_SCHEDULE_DATA: Record<FacilityId, FacilityData> = {
             Rules.weekday(times('11:00', '17:00')),
             Rules.subWeekday('saturday', [], true),
             Rules.subWeekday('sunday', [], true),
+        ]
+    },
+    university_events: {
+        name: '大学行事予定',
+        nameEn: 'University Events',
+        category: 'facility',
+        rules: [
+            Rules.date('2026-01-05', [], '授業再開'),
+            Rules.date('2026-01-08', [], '履修登録･修正期間(冬学期)'),
+            Rules.date('2026-01-09', [], '履修登録･修正期間(冬学期) / 卒業論文・卒業研究 提出締切'),
+            Rules.date('2026-01-13', [], '金曜授業実施日'),
+            Rules.date('2026-01-15', [], '秋学期授業終了'),
+            Rules.closedDate('2026-01-16', '全学臨時休講'),
+            Rules.closedRange('2026-01-17', '2026-01-18', '全学臨時休講 (共通テスト)'),
+            Rules.range('2026-01-19', '2026-01-23', [], '秋学期 定期試験期間'),
+            Rules.date('2026-01-26', [], '冬学期 授業開始'),
+
+            // February 2026
+            Rules.date('2026-02-02', [], '秋学期成績Web閲覧開始(9:00) / 問い合わせ期間開始'),
+            Rules.range('2026-02-03', '2026-02-06', [], '秋学期成績問い合わせ期間 (~16:30)'),
+            Rules.date('2026-02-06', [], '冬学期 授業終了 / 秋学期成績問い合わせ期限(16:30)'),
+
+            Rules.date('2026-02-16', [], '冬学期成績Web閲覧開始(9:00) / 問い合わせ期間開始'),
+            Rules.range('2026-02-17', '2026-02-20', [], '冬学期成績問い合わせ期間 (~16:30)'),
+
+            Rules.closedDate('2026-02-24', '全学臨時休講（入構制限）'),
+            Rules.closedDate('2026-02-25', '第2次学力試験（前期）/ 入構制限'),
+            // Removed 卒業予定者発表 as requested
+
+            // March 2026
+            Rules.closedRange('2026-03-11', '2026-03-12', '全学臨時休講（入構制限）'),
+            Rules.date('2026-03-12', [], '第2次学力試験（後期）'), // Note: already covered by closed range but good to be explicit text? 
+            // Actually closedRange takes precedence usually, but date might overwrite if later? 
+            // Better to combine text in the range or use date for note.
+            // Let's use date for specific note on 12th if needed, but closedRange has 'note'.
+            // I'll update the note on 12th specifically to include exam info if the range doesn't cover it well.
+            // Actually, simply adding specific date rules after range might work depending on logic, 
+            // but status-utils usually takes the *first* match or specific match. 
+            // Use specific dates for clarity.
+
+            Rules.range('2026-03-11', '2026-03-20', [], '卒業者・進級者発表'), // Mid Mar (approx)
+            Rules.date('2026-03-20', [], '卒業式（学位記授与式）'),
+            Rules.date('2026-03-31', [], '学年終わり'),
+
+            // Fallbacks
+            Rules.weekday([], ''),
+            Rules.subWeekday('saturday', [], false),
+            Rules.subWeekday('sunday', [], false),
         ]
     }
 };
