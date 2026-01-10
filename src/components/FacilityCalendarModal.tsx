@@ -78,8 +78,8 @@ export const FacilityCalendarModal: React.FC<FacilityCalendarModalProps> = ({ fa
     };
 
     return (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center sm:items-center items-end p-0 sm:p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200" onClick={onClose}>
-            <div className="w-full sm:max-w-md bg-calm-bg rounded-t-2xl sm:rounded-2xl shadow-xl overflow-hidden border-t sm:border border-white/20 animate-in slide-in-from-bottom-10 sm:zoom-in-95 duration-200 flex flex-col max-h-[75vh] sm:max-h-[85vh] safe-pb" onClick={e => e.stopPropagation()}>
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200" onClick={onClose}>
+            <div className="w-full sm:max-w-md bg-calm-bg rounded-2xl shadow-xl overflow-hidden border border-white/20 animate-in slide-in-from-bottom-10 sm:zoom-in-95 duration-200 flex flex-col max-h-[75vh] sm:max-h-[85vh] safe-pb" onClick={e => e.stopPropagation()}>
                 {/* Header Section (Fixed) */}
                 <div className="flex-none bg-calm-bg z-10 relative">
                     <div className="p-4 border-b border-gray-100 flex items-center justify-between">

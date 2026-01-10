@@ -47,8 +47,8 @@ export const FacilityCard: React.FC<FacilityCardProps> = ({ facilityId, date, co
     if (compact) {
         return (
             <div onClick={onClick} className={cn("glass p-3 rounded-xl flex items-center justify-between border transition-all", styles.border)}>
-                <div className="flex items-center gap-3">
-                    <div className={cn("p-2 rounded-full", styles.bg)}>
+                <div className="flex items-center gap-3 min-w-0 flex-1">
+                    <div className={cn("p-2 rounded-full shrink-0", styles.bg)}>
                         <Icon size={18} className={styles.text} />
                     </div>
                     <div className="min-w-0 flex-1">
@@ -56,12 +56,12 @@ export const FacilityCard: React.FC<FacilityCardProps> = ({ facilityId, date, co
                         {alert && <p className="text-[10px] text-amber-600 font-bold truncate">{alert}</p>}
                     </div>
                 </div>
-                <div className="text-right shrink-0 ml-2">
-                    <div className={cn("inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-bold", styles.bg, styles.text)}>
-                        <span className={cn("w-1.5 h-1.5 rounded-full animate-pulse", styles.dot)} />
-                        {statusText}
+                <div className="text-right shrink-0 ml-2 max-w-[45%]">
+                    <div className={cn("inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-bold w-full justify-end flex-wrap", styles.bg, styles.text)}>
+                        <span className={cn("w-1.5 h-1.5 rounded-full animate-pulse shrink-0", styles.dot)} />
+                        <span className="whitespace-normal text-right">{statusText}</span>
                     </div>
-                    {nextChangeText && <p className="text-[10px] text-slate-400 mt-0.5">{nextChangeText}</p>}
+                    {nextChangeText && <p className="text-[10px] text-slate-400 mt-0.5 break-words whitespace-normal leading-tight">{nextChangeText}</p>}
                 </div>
             </div>
         );
@@ -94,8 +94,8 @@ export const FacilityCard: React.FC<FacilityCardProps> = ({ facilityId, date, co
             </div>
 
             <div className="mt-1 flex items-end justify-between">
-                <div className="flex flex-col">
-                    <span className="text-sm font-semibold text-slate-700">{nextChangeText || 'See details'}</span>
+                <div className="flex flex-col min-w-0 w-full">
+                    <span className="text-sm font-semibold text-slate-700 break-words">{nextChangeText || 'See details'}</span>
                 </div>
             </div>
 

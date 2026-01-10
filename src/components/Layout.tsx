@@ -16,7 +16,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 function LayoutContent({ children }: { children: React.ReactNode }) {
-    const { language, setLanguage } = useLanguage();
+    const { language, setLanguage, t } = useLanguage();
     const { isMaintenanceMode, setMaintenanceMode } = useMaintenance();
     const [isAboutOpen, setIsAboutOpen] = React.useState(false);
     const [isMenuOpen, setIsMenuOpen] = React.useState(false);
@@ -78,13 +78,12 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
                             <button
                                 onClick={() => {
                                     setLanguage(language === 'ja' ? 'en' : 'ja');
-                                    setIsMenuOpen(false);
                                 }}
                                 className="w-full flex items-center justify-between p-3 rounded-xl hover:bg-white/60 transition-colors text-left group"
                             >
                                 <div className="flex items-center gap-3 text-calm-text group-hover:text-accent">
                                     <Languages size={18} />
-                                    <span className="text-sm font-bold">Language</span>
+                                    <span className="text-sm font-bold">{t('menu.language')}</span>
                                 </div>
                                 <span className="text-xs font-bold bg-white/50 px-2 py-1 rounded-md text-calm-subtext uppercase tracking-wider">
                                     {language}
@@ -102,7 +101,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
                                 className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-white/60 transition-colors text-left text-calm-text hover:text-accent"
                             >
                                 <Info size={18} />
-                                <span className="text-sm font-bold">About App</span>
+                                <span className="text-sm font-bold">{t('menu.about')}</span>
                             </button>
 
                             {/* Feedback */}
@@ -114,7 +113,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
                                 onClick={() => setIsMenuOpen(false)}
                             >
                                 <MessageSquare size={18} />
-                                <span className="text-sm font-bold">Feedback</span>
+                                <span className="text-sm font-bold">{t('menu.feedback')}</span>
                             </a>
                         </div>
                     )}

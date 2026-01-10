@@ -41,13 +41,21 @@ export const FirstVisitModal: React.FC = () => {
                             {t('first_visit.text')}
                         </p>
 
-                        <button
-                            onClick={handleClose}
-                            className="w-full flex items-center justify-center gap-2 py-3 px-4 bg-slate-900 hover:bg-slate-800 text-white font-medium rounded-xl transition-colors mt-2"
-                        >
-                            <span className="font-bold">{t('first_visit.button')}</span>
-                            <Check size={18} />
-                        </button>
+                        <div className="flex gap-3 mt-4 w-full">
+                            <button
+                                onClick={() => window.history.back()}
+                                className="flex-1 py-3 px-4 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-xl transition-colors"
+                            >
+                                {t('first_visit.disagree')}
+                            </button>
+                            <button
+                                onClick={handleClose}
+                                className="flex-1 flex items-center justify-center gap-2 py-3 px-4 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl transition-colors"
+                            >
+                                <span>{t('first_visit.agree')}</span>
+                                <Check size={18} />
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

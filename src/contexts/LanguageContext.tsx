@@ -57,12 +57,18 @@ export const translations: Record<string, Record<Language, string>> = {
     'about.official_links': { ja: '公式サイト', en: 'Official Links' },
     'about.coop': { ja: '大学生協 (営業時間)', en: 'University Co-op' },
     'about.admin_calendar': { ja: '大学・教務・事務窓口', en: 'University Admin Calendar' },
-    'about.student_procedures': { ja: '諸手続き (届出・証明書)', en: 'Student Procedures' },
+    // Header Menu
+    'menu.language': { ja: '言語', en: 'Language' },
+    'menu.about': { ja: 'アプリについて', en: 'About App' },
+    'menu.feedback': { ja: 'フィードバック・お問い合わせ', en: 'Feedback & Contacts' },
+
+    // Student Procedures
 
     // First Visit Modal
     'first_visit.title': { ja: 'ご利用前の確認', en: 'Important Notice' },
-    'first_visit.text': { ja: '本アプリは非公式のβ版であり、外部サイトのデータを参照しています。元データが未公開の場合は誤りが生じる可能性があることをご了承ください。', en: 'This is an unofficial beta app using external data. Errors may occur if original data is unpublished. Please use at your own discretion.' },
-    'first_visit.button': { ja: '了解しました', en: 'Understood' },
+    'first_visit.text': { ja: '本アプリは外部サイトのデータを参照しています。元データが未公開の場合は誤りが生じる可能性が高いことをご了承ください。', en: 'This app references data from external sites. Please note that errors are highly likely if the original data is unpublished.' },
+    'first_visit.disagree': { ja: '了解しない', en: 'Disagree' },
+    'first_visit.agree': { ja: '了解', en: 'Agree' },
 };
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
