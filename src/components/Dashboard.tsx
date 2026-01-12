@@ -1,21 +1,22 @@
 import React, { useState } from 'react';
 import { DateSelector } from './DateSelector';
 import { FacilityCard } from './FacilityCard';
-import { AdminAccordion } from './AdminAccordion';
+import { AdminBuildingCard } from './AdminBuildingCard';
 import { type FacilityId } from '../lib/schedules';
 import { useLanguage } from '../contexts/LanguageContext';
 import { FacilityCalendarModal } from './FacilityCalendarModal';
 
+import { getNowJST } from '../lib/date';
+
 export const Dashboard: React.FC = () => {
-    const [date, setDate] = useState(new Date());
+    const [date, setDate] = useState(getNowJST());
     const { t } = useLanguage();
 
     const [selectedFacility, setSelectedFacility] = useState<FacilityId | null>(null);
 
     return (
         <div className="p-4 sm:p-6 lg:p-8 max-w-screen-lg mx-auto">
-            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6">
-                <h1 className="text-2xl font-bold text-calm-text mb-4 sm:mb-0">{t('dashboard.title')}</h1>
+            <div className="flex flex-col sm:flex-row sm:justify-center sm:items-center mb-6">
                 <DateSelector currentDate={date} onDateChange={setDate} />
             </div>
 
@@ -63,8 +64,8 @@ export const Dashboard: React.FC = () => {
 
                 <section className="space-y-4">
                     <h2 className="text-sm font-bold text-calm-subtext uppercase tracking-wider pl-2">{t('section.administration')}</h2>
+                    <AdminBuildingCard date={date} onSelectFacility={setSelectedFacility} />
                     <FacilityCard facilityId="cert_machine" date={date} onClick={() => setSelectedFacility('cert_machine')} />
-                    <AdminAccordion date={date} />
                 </section>
             </div>
 

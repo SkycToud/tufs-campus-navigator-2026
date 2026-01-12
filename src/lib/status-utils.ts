@@ -1,7 +1,7 @@
 import { isSameDay, parseISO, isWithinInterval, getDay, format } from 'date-fns';
-import { toZonedTime } from 'date-fns-tz';
 import { CONST_SCHEDULE_DATA, type FacilityId, type ScheduleRule } from './schedules';
-import { formatJST, TIMEZONE } from './date';
+import { formatJST } from './date';
+import * as holiday_jp from 'holiday-jp';
 
 export type FacilityStatus = 'open' | 'closed' | 'break' | 'closing_soon';
 
@@ -11,6 +11,10 @@ export interface StatusResult {
     nextChangeText: string;
     alert?: string;
     isOpen: boolean;
+    // Removed 'hours' property from interface as it's not standard StatusResult, but AdminBuildingCard was using it. 
+    // I should add it back if I want to keep compatibility or fix AdminBuildingCard. 
+    // AdminBuildingCard uses { status, hours, statusText }.
+    hours?: { start: string; end: string };
 }
 
 export function calculateFacilityStatus(
@@ -31,7 +35,7 @@ export function calculateFacilityStatus(
         };
     }
 
-    const nowJST = toZonedTime(now, TIMEZONE);
+    const nowJST = now;
     const dateJSTStr = formatJST(date, 'yyyy-MM-dd');
     const facilityData = CONST_SCHEDULE_DATA[facilityId];
 
@@ -59,14 +63,33 @@ export function calculateFacilityStatus(
     // Priority 1: Specific Date
     matchedRule = rules.find(r => r.type === 'specific_date' && r.dates?.some(d => isSameDay(parseISO(d), date)));
 
-    // Priority 2: Range
+    // Priority 2: National Holiday (Dynamic)
+    if (!matchedRule) {
+        const isHoliday = holiday_jp.isHoliday(date);
+        if (isHoliday) {
+            matchedRule = rules.find(r => r.type === 'national_holiday');
+            // If found, use it. Usually national_holiday rule implies closed, but could be open if configured.
+            // If the rule says 'isClosed: true', it will be handled below.
+            // If no national_holiday rule exists for this facility, we continue to standard weekday/range checks.
+            // However, explicit 'national_holiday' rule takes precedence over range/weekday.
+
+            // IMPORTANT: If matchedRule is generic "national_holiday", we probably want to append the holiday name
+            if (matchedRule) {
+                // Clone to avoid mutating const, and add holiday name to note if missing
+                const holidayName = holiday_jp.between(date, date)[0]?.name || '祝日';
+                matchedRule = { ...matchedRule, note: matchedRule.note === '祝日' ? holidayName : matchedRule.note };
+            }
+        }
+    }
+
+    // Priority 3: Range
     if (!matchedRule) {
         matchedRule = rules.find(r => r.type === 'range' && r.startDate && r.endDate &&
             isWithinInterval(date, { start: parseISO(r.startDate), end: parseISO(r.endDate) })
         );
     }
 
-    // Priority 3: Day of week
+    // Priority 4: Day of week
     if (!matchedRule) {
         if (dayOfWeek === 0) matchedRule = rules.find(r => r.type === 'sunday');
         else if (dayOfWeek === 6) matchedRule = rules.find(r => r.type === 'saturday');
@@ -92,7 +115,8 @@ export function calculateFacilityStatus(
             statusText: hoursText || t('status.closed'),
             nextChangeText: '',
             isOpen: false,
-            alert: matchedRule.note
+            alert: matchedRule.note,
+            hours: matchedRule.hours[0] // Add hours for AdminBuildingCard compatibility
         };
     }
 
@@ -124,7 +148,8 @@ export function calculateFacilityStatus(
             statusText: t('status.open'),
             nextChangeText: `${t('status.closes_at')} ${format(closeDate, 'H:mm')}`,
             isOpen: true,
-            alert: matchedRule.note
+            alert: matchedRule.note,
+            hours: currentRange // Export current range
         };
     } else if (isBreak) {
         return {
@@ -208,7 +233,20 @@ export function getFacilityDailyInfo(
     matchedRule = rules.find(r => r.type === 'specific_date' && r.dates?.some(d => isSameDay(parseISO(d), date)));
     if (matchedRule) ruleType = 'specific_date';
 
-    // Priority 2: Range
+    // Priority 2: National Holiday (Dynamic)
+    if (!matchedRule) {
+        const isHoliday = holiday_jp.isHoliday(date);
+        if (isHoliday) {
+            matchedRule = rules.find(r => r.type === 'national_holiday');
+            if (matchedRule) {
+                ruleType = 'national_holiday';
+                const holidayName = holiday_jp.between(date, date)[0]?.name || '祝日';
+                matchedRule = { ...matchedRule, note: matchedRule.note === '祝日' ? holidayName : matchedRule.note };
+            }
+        }
+    }
+
+    // Priority 3: Range
     if (!matchedRule) {
         matchedRule = rules.find(r => r.type === 'range' && r.startDate && r.endDate &&
             isWithinInterval(date, { start: parseISO(r.startDate), end: parseISO(r.endDate) })
@@ -216,7 +254,7 @@ export function getFacilityDailyInfo(
         if (matchedRule) ruleType = 'range';
     }
 
-    // Priority 3: Day of week
+    // Priority 4: Day of week
     if (!matchedRule) {
         if (dayOfWeek === 0) { matchedRule = rules.find(r => r.type === 'sunday'); ruleType = 'sunday'; }
         else if (dayOfWeek === 6) { matchedRule = rules.find(r => r.type === 'saturday'); ruleType = 'saturday'; }

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { type FacilityId } from '../lib/schedules';
+import { getNowJST } from '../lib/date';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useMaintenance } from '../contexts/MaintenanceContext';
 import { calculateFacilityStatus, type StatusResult, type FacilityStatus } from '../lib/status-utils';
@@ -18,7 +19,7 @@ export function useFacilityStatus(facilityId: FacilityId, date: Date = new Date(
 
     useEffect(() => {
         const calculateStatus = () => {
-            const now = new Date();
+            const now = getNowJST();
 
             const statusResult = calculateFacilityStatus(
                 facilityId,

@@ -11,10 +11,11 @@ export type FacilityId =
     | 'lecture_bldg'
     | 'agora_global'
     | 'cafe_castalia'
+    | 'admin_bldg'
     | 'university_events';
 
 export type ScheduleRule = {
-    type: 'weekday' | 'wednesday' | 'saturday' | 'sunday' | 'specific_date' | 'range';
+    type: 'weekday' | 'wednesday' | 'saturday' | 'sunday' | 'specific_date' | 'range' | 'national_holiday';
     dates?: string[]; // ISO YYYY-MM-DD
     startDate?: string;
     endDate?: string;
@@ -50,6 +51,11 @@ const Rules = {
         type, hours, isClosed
     }),
 
+    // Dynamic Rules
+    nationalHoliday: (isClosed = true, note?: string): ScheduleRule => ({
+        type: 'national_holiday', hours: [], isClosed, note: note || '祝日'
+    }),
+
     // Shortcuts for Closed/Open
     closedDate: (date: string, note?: string): ScheduleRule => ({
         type: 'specific_date', dates: [date], hours: [], isClosed: true, note
@@ -57,6 +63,10 @@ const Rules = {
     closedRange: (startDate: string, endDate: string, note?: string): ScheduleRule => ({
         type: 'range', startDate, endDate, hours: [], isClosed: true, note
     }),
+    closedWeekends: (): ScheduleRule[] => [
+        { type: 'saturday', hours: [], isClosed: true },
+        { type: 'sunday', hours: [], isClosed: true }
+    ]
 };
 
 // Common Hours
@@ -78,6 +88,24 @@ const HO = {
         { start: '13:00', end: '17:00' }
     ]
 };
+
+// Common Admin Rules (Closed dates shared across all admin facilities)
+const COMMON_ADMIN_RULES: ScheduleRule[] = [
+    // Exceptions: New Year
+    Rules.closedRange('2026-01-01', '2026-01-04', '年始休業'),
+
+    // Holidays (2026 Jan-Mar)
+    Rules.closedDate('2026-01-12', '成人の日'),
+    Rules.closedDate('2026-02-11', '建国記念の日'),
+    Rules.closedDate('2026-02-23', '天皇誕生日'),
+    Rules.closedDate('2026-03-20', '春分の日'), // Graduation ceremony is usually open, but as Admin logic requested: closed on holidays.
+    // Note: Graduation is 3/20. If it's a holiday, Admin is usually closed unless specific exception. 
+    // User requested "Apply Admin holiday schedule", so 3/20 is closed.
+
+    // Weekends are closed
+    Rules.subWeekday('saturday', [], true),
+    Rules.subWeekday('sunday', [], true),
+];
 
 export const CONST_SCHEDULE_DATA: Record<FacilityId, FacilityData> = {
     library: {
@@ -131,7 +159,7 @@ export const CONST_SCHEDULE_DATA: Record<FacilityId, FacilityData> = {
         name: '1階食堂ミール',
         nameEn: 'Cafeteria Meal (1F)',
         category: 'facility',
-        unpublishedFrom: '2026-03-01',
+        unpublishedFrom: '2026-04-01',
         rules: [
             Rules.closedRange('2026-01-01', '2026-01-04', '年始休業'),
             Rules.range('2026-01-05', '2026-01-06', HO.LUNCH_STD),
@@ -141,10 +169,10 @@ export const CONST_SCHEDULE_DATA: Record<FacilityId, FacilityData> = {
             Rules.date('2026-01-13', HO.LUNCH_STD),
             Rules.date('2026-01-14', HO.LUNCH_SHORT, '短縮営業'),
             Rules.date('2026-01-15', HO.LUNCH_STD),
-            Rules.closedRange('2026-01-16', '2026-01-18', '共通テスト・入試準備'),
-            Rules.range('2026-01-19', '2026-01-23', HO.LUNCH_EXAM, '定期試験期間'),
+            Rules.closedRange('2026-01-16', '2026-01-18'),
+            Rules.range('2026-01-19', '2026-01-23', HO.LUNCH_EXAM),
             Rules.closedRange('2026-01-24', '2026-01-25'),
-            Rules.range('2026-01-26', '2026-01-30', times('11:30', '13:00'), '冬学期・短縮営業'),
+            Rules.range('2026-01-26', '2026-01-30', times('11:30', '13:00')),
             Rules.closedDate('2026-01-31'),
 
             // February 2026
@@ -161,10 +189,27 @@ export const CONST_SCHEDULE_DATA: Record<FacilityId, FacilityData> = {
             Rules.closedDate('2026-02-21', '定休日'),
             Rules.closedDate('2026-02-22', '定休日'),
             Rules.closedDate('2026-02-23', '天皇誕生日（祝日）'),
-            Rules.closedDate('2026-02-24', '入試準備'),
-            Rules.closedDate('2026-02-25', '東外大 前期日程'),
+            Rules.closedDate('2026-02-24'),
+            Rules.closedDate('2026-02-25'),
             Rules.range('2026-02-26', '2026-02-27', times('11:30', '13:00')),
             Rules.closedDate('2026-02-28', '定休日'),
+
+            // March 2026
+            Rules.closedDate('2026-03-01', '定休日'),
+            Rules.range('2026-03-02', '2026-03-06', [], '営業時間未定'),
+            Rules.closedRange('2026-03-07', '2026-03-08', '定休日'),
+            Rules.range('2026-03-09', '2026-03-10', [], '営業時間未定'),
+            Rules.closedRange('2026-03-11', '2026-03-12', '後期日程試験（入構制限）'),
+            Rules.date('2026-03-13', [], '営業時間未定'),
+            Rules.closedRange('2026-03-14', '2026-03-15', '定休日'),
+            Rules.date('2026-03-16', [], '営業時間未定'), // ミック? User provided '16日 1階食堂ミック' but likely typo for ミール or switch? Assuming Meal based on context. Wait, user provided "2026-03-16,1階食堂ミック,営業,不明" for Meal section. That's likely 'Meal'.
+            Rules.range('2026-03-17', '2026-03-19', [], '営業時間未定'),
+            Rules.date('2026-03-20', times('11:00', '13:30'), '卒業式'),
+            Rules.closedRange('2026-03-21', '2026-03-22', '定休日'),
+            Rules.range('2026-03-23', '2026-03-27', [], '営業時間未定'),
+            Rules.closedRange('2026-03-28', '2026-03-29', '定休日'),
+            Rules.range('2026-03-30', '2026-03-31', [], '営業時間未定'),
+
             // Fallbacks
             Rules.weekday(times('11:30', '14:30')),
             Rules.subWeekday('wednesday', times('11:30', '13:30')),
@@ -176,7 +221,7 @@ export const CONST_SCHEDULE_DATA: Record<FacilityId, FacilityData> = {
         name: '2階食堂さぼおる',
         nameEn: 'Cafeteria Sabor (2F)',
         category: 'facility',
-        unpublishedFrom: '2026-03-01',
+        unpublishedFrom: '2026-04-01',
         rules: [
             Rules.closedRange('2026-01-01', '2026-01-04', '年始休業'),
             Rules.range('2026-01-05', '2026-01-09', HO.LUNCH_STD, '11:00-13:00（食事メニュー提供）、11:00-14:30（焼き立てパン販売）'),
@@ -186,6 +231,10 @@ export const CONST_SCHEDULE_DATA: Record<FacilityId, FacilityData> = {
 
             // February 2026
             Rules.closedRange('2026-02-01', '2026-02-28', '2月全日休業'),
+
+            // March 2026
+            Rules.closedRange('2026-03-01', '2026-03-31', '3月全日休業'),
+
             // Fallbacks
             Rules.weekday([], 'closed'), // Mark as closed basically
             Rules.subWeekday('saturday', [], true),
@@ -196,7 +245,7 @@ export const CONST_SCHEDULE_DATA: Record<FacilityId, FacilityData> = {
         name: '購買書籍部ハッチポッチ',
         nameEn: 'Co-op Store Hatchpotch',
         category: 'facility',
-        unpublishedFrom: '2026-03-01',
+        unpublishedFrom: '2026-04-01',
         rules: [
             Rules.closedRange('2026-01-01', '2026-01-04', '年始休業'),
             Rules.range('2026-01-05', '2026-01-06', HO.STORE_STD),
@@ -206,10 +255,10 @@ export const CONST_SCHEDULE_DATA: Record<FacilityId, FacilityData> = {
             Rules.date('2026-01-13', HO.STORE_STD),
             Rules.date('2026-01-14', HO.STORE_SHORT, '短縮営業'),
             Rules.date('2026-01-15', HO.STORE_STD),
-            Rules.closedRange('2026-01-16', '2026-01-18', '共通テスト・入試準備'),
-            Rules.range('2026-01-19', '2026-01-23', times('11:30', '14:30'), '定期試験期間'),
+            Rules.closedRange('2026-01-16', '2026-01-18'),
+            Rules.range('2026-01-19', '2026-01-23', times('11:30', '14:30')),
             Rules.closedRange('2026-01-24', '2026-01-25'),
-            Rules.range('2026-01-26', '2026-01-30', times('11:30', '13:00'), '冬学期・短縮営業'),
+            Rules.range('2026-01-26', '2026-01-30', times('11:30', '13:00')),
             Rules.closedDate('2026-01-31'),
 
             // February 2026
@@ -226,10 +275,26 @@ export const CONST_SCHEDULE_DATA: Record<FacilityId, FacilityData> = {
             Rules.closedDate('2026-02-21', '定休日'),
             Rules.closedDate('2026-02-22', '定休日'),
             Rules.closedDate('2026-02-23', '天皇誕生日（祝日）'),
-            Rules.closedDate('2026-02-24', '入試準備'),
-            Rules.closedDate('2026-02-25', '東外大 前期日程'),
+            Rules.closedDate('2026-02-24'),
+            Rules.closedDate('2026-02-25'),
             Rules.range('2026-02-26', '2026-02-27', times('11:30', '13:00'), '短縮営業'),
             Rules.closedDate('2026-02-28', '定休日'),
+
+            // March 2026
+            Rules.closedDate('2026-03-01', '定休日'),
+            Rules.range('2026-03-02', '2026-03-06', [], '営業時間未定'),
+            Rules.closedRange('2026-03-07', '2026-03-08', '定休日'),
+            Rules.range('2026-03-09', '2026-03-11', [], '営業時間未定'),
+            Rules.closedDate('2026-03-12', '後期日程試験（入構制限）'), // Matches offline? 12th is closed for store in user list. 11th Open? User: 11 Open, 12 Closed.
+            Rules.date('2026-03-13', [], '営業時間未定'),
+            Rules.closedRange('2026-03-14', '2026-03-15', '定休日'),
+            Rules.range('2026-03-16', '2026-03-19', [], '営業時間未定'),
+            Rules.date('2026-03-20', times('11:00', '16:30'), '卒業式'),
+            Rules.closedRange('2026-03-21', '2026-03-22', '定休日'),
+            Rules.range('2026-03-23', '2026-03-27', [], '営業時間未定'),
+            Rules.closedRange('2026-03-28', '2026-03-29', '定休日'),
+            Rules.range('2026-03-30', '2026-03-31', [], '営業時間未定'),
+
             // Fallbacks
             Rules.weekday(HO.STORE_STD),
             Rules.subWeekday('wednesday', HO.STORE_SHORT),
@@ -242,9 +307,8 @@ export const CONST_SCHEDULE_DATA: Record<FacilityId, FacilityData> = {
         nameEn: 'Academic, Student & International Student Affairs',
         category: 'admin',
         rules: [
+            ...COMMON_ADMIN_RULES,
             Rules.weekday(HO.ADMIN_LUNCH, '昼休み 12:40-13:40'),
-            Rules.subWeekday('saturday', [], true),
-            Rules.subWeekday('sunday', [], true),
         ]
     },
     admission: {
@@ -252,9 +316,8 @@ export const CONST_SCHEDULE_DATA: Record<FacilityId, FacilityData> = {
         nameEn: 'Admissions',
         category: 'admin',
         rules: [
+            ...COMMON_ADMIN_RULES,
             Rules.weekday(HO.ADMISSION_LUNCH, '昼休み 12:00-13:00'),
-            Rules.subWeekday('saturday', [], true),
-            Rules.subWeekday('sunday', [], true),
         ]
     },
     accounting: {
@@ -262,9 +325,8 @@ export const CONST_SCHEDULE_DATA: Record<FacilityId, FacilityData> = {
         nameEn: 'Accounting Division',
         category: 'admin',
         rules: [
+            ...COMMON_ADMIN_RULES,
             Rules.weekday(HO.ADMIN_STD, '現金受付は15:00まで'),
-            Rules.subWeekday('saturday', [], true),
-            Rules.subWeekday('sunday', [], true),
         ]
     },
     cert_machine: {
@@ -272,9 +334,8 @@ export const CONST_SCHEDULE_DATA: Record<FacilityId, FacilityData> = {
         nameEn: 'Certificate Machine',
         category: 'facility',
         rules: [
+            ...COMMON_ADMIN_RULES,
             Rules.weekday(times('09:00', '17:00')),
-            Rules.subWeekday('saturday', [], true),
-            Rules.subWeekday('sunday', [], true),
         ]
     },
     circle_bldg: {
@@ -328,6 +389,26 @@ export const CONST_SCHEDULE_DATA: Record<FacilityId, FacilityData> = {
             Rules.subWeekday('sunday', [], true),
         ]
     },
+    admin_bldg: {
+        name: '本部管理棟',
+        nameEn: 'Administration Building',
+        category: 'admin',
+        rules: [
+            // Exceptions: New Year
+            Rules.closedRange('2026-01-01', '2026-01-04', '年始休業'),
+
+            // Holidays (2026 Jan-Mar)
+            Rules.closedDate('2026-01-12', '成人の日'),
+            Rules.closedDate('2026-02-11', '建国記念の日'),
+            Rules.closedDate('2026-02-23', '天皇誕生日'),
+            Rules.closedDate('2026-03-20', '春分の日'),
+
+            // Default Logic
+            Rules.weekday(HO.ADMIN_STD),
+            Rules.subWeekday('saturday', [], true), // Closed
+            Rules.subWeekday('sunday', [], true),   // Closed
+        ]
+    },
     university_events: {
         name: '大学行事予定',
         nameEn: 'University Events',
@@ -345,11 +426,12 @@ export const CONST_SCHEDULE_DATA: Record<FacilityId, FacilityData> = {
 
             // February 2026
             Rules.date('2026-02-02', [], '秋学期成績Web閲覧開始(9:00) / 問い合わせ期間開始'),
-            Rules.range('2026-02-03', '2026-02-06', [], '秋学期成績問い合わせ期間 (~16:30)'),
-            Rules.date('2026-02-06', [], '冬学期 授業終了 / 秋学期成績問い合わせ期限(16:30)'),
+            Rules.range('2026-02-03', '2026-02-05', [], '秋学期成績問い合わせ期間'),
+            Rules.date('2026-02-06', [], '冬学期 授業終了 / 秋学期成績問い合わせ期限(~16:30)'),
 
             Rules.date('2026-02-16', [], '冬学期成績Web閲覧開始(9:00) / 問い合わせ期間開始'),
-            Rules.range('2026-02-17', '2026-02-20', [], '冬学期成績問い合わせ期間 (~16:30)'),
+            Rules.range('2026-02-17', '2026-02-19', [], '冬学期成績問い合わせ期間'),
+            Rules.date('2026-02-20', [], '冬学期成績問い合わせ期限(~16:30)'),
 
             Rules.closedDate('2026-02-24', '全学臨時休講（入構制限）'),
             Rules.closedDate('2026-02-25', '第2次学力試験（前期）/ 入構制限'),

@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { format, addMonths, subMonths, isToday, getDay } from 'date-fns';
+import { format, addMonths, subMonths, isToday, getDay, isSameDay } from 'date-fns';
 import { ja, enUS } from 'date-fns/locale';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useMonthlySchedule } from '../hooks/useMonthlySchedule';
 import { CONST_SCHEDULE_DATA, type FacilityId } from '../lib/schedules';
 import { cn } from '../lib/utils';
+import { getFacilityDailyInfo } from '../lib/status-utils';
 import { useLanguage } from '../contexts/LanguageContext';
 
 interface FacilityCalendarModalProps {
@@ -16,11 +17,13 @@ interface FacilityCalendarModalProps {
 export const FacilityCalendarModal: React.FC<FacilityCalendarModalProps> = ({ facilityId, isOpen, onClose }) => {
     const { language, t } = useLanguage();
     const [currentMonth, setCurrentMonth] = useState(new Date());
+    const [selectedDate, setSelectedDate] = useState(new Date());
 
     // Prevent background scrolling when modal is open
     React.useEffect(() => {
         if (isOpen) {
             document.body.style.overflow = 'hidden';
+            setSelectedDate(new Date());
         } else {
             document.body.style.overflow = '';
         }
@@ -141,8 +144,8 @@ export const FacilityCalendarModal: React.FC<FacilityCalendarModalProps> = ({ fa
                                 let colorClass, dotClass;
                                 if (facilityId === 'university_events') {
                                     if (day.info.note) {
-                                        if (day.info.note.includes('履修')) {
-                                            // Highlight "Registration" events (Orange/Amber)
+                                        if (day.info.note.includes('履修') || day.info.note.includes('成績')) {
+                                            // Highlight "Registration" & "Grade Inquiry" events (Orange/Amber)
                                             colorClass = "bg-amber-50/90 border-amber-200 text-amber-900";
                                             dotClass = "bg-amber-500";
                                         } else {
@@ -161,16 +164,20 @@ export const FacilityCalendarModal: React.FC<FacilityCalendarModalProps> = ({ fa
                                     dotClass = getDotColor(day.info.color || 'gray');
                                 }
 
+                                const isSelected = isSameDay(day.date, selectedDate);
                                 return (
-                                    <div
+                                    <button
                                         key={day.date.toISOString()}
+                                        onClick={() => setSelectedDate(day.date)}
                                         className={cn(
-                                            "min-h-[80px] p-1.5 rounded-lg border text-xs relative flex flex-col transition-all",
-                                            isCurrentDay && "ring-2 ring-accent ring-offset-1",
+                                            "min-h-[60px] p-1.5 rounded-lg border text-xs relative flex flex-col transition-all text-left",
+                                            isCurrentDay && "ring-2 ring-accent ring-offset-1 z-10",
+                                            isSelected && "ring-2 ring-indigo-500 ring-offset-1 z-10",
+                                            !isCurrentDay && !isSelected && "hover:ring-2 hover:ring-black/5 hover:z-10",
                                             colorClass
                                         )}
                                     >
-                                        <div className="flex justify-between items-start mb-1">
+                                        <div className="flex justify-between items-start mb-0.5 w-full">
                                             <span className={cn(
                                                 "font-bold text-sm",
                                                 isCurrentDay && "text-accent"
@@ -179,27 +186,58 @@ export const FacilityCalendarModal: React.FC<FacilityCalendarModalProps> = ({ fa
                                             </span>
                                             {/* Status Dot */}
                                             <div className={cn(
-                                                "w-2 h-2 rounded-full",
+                                                "w-2 h-2 rounded-full shrink-0 mt-1",
                                                 dotClass
                                             )} />
                                         </div>
 
-                                        <div className="flex-1 flex flex-col justify-center gap-0.5">
-                                            <p className="font-medium leading-tight text-[10px] break-words">
+                                        <div className="flex-1 flex flex-col justify-end w-full min-h-0">
+                                            <p className="font-bold leading-tight text-[10px] truncate">
                                                 {day.info.hours}
                                             </p>
-                                            {day.info.note && (
-                                                <p className="text-[9px] opacity-75 font-normal truncate">
-                                                    {day.info.note}
-                                                </p>
-                                            )}
                                         </div>
-                                    </div>
+                                    </button>
                                 );
                             })}
                         </div>
 
                     </div>
+                </div>
+
+                {/* Detail Area */}
+                <div className="bg-white/80 backdrop-blur-md rounded-xl p-4 border border-white/50 shadow-sm animate-in slide-in-from-bottom-2 duration-300 sticky bottom-0 z-10 mx-4 mb-4">
+                    {(() => {
+                        const info = getFacilityDailyInfo(validFacilityId, selectedDate, t);
+                        return (
+                            <div className="flex flex-col gap-2">
+                                <div className="flex items-baseline justify-between border-b border-slate-100 pb-2">
+                                    <div className="flex items-baseline gap-2">
+                                        <span className="text-lg font-bold text-calm-text">
+                                            {format(selectedDate, 'M/d', { locale })}
+                                        </span>
+                                        <span className="text-sm font-bold text-calm-subtext">
+                                            ({format(selectedDate, 'EEE', { locale })})
+                                        </span>
+                                    </div>
+                                    <span className={`text-sm font-bold px-2 py-0.5 rounded-md ${info.scheduleType === 'closed' ? 'bg-slate-100 text-slate-500' : 'bg-emerald-100 text-emerald-700'}`}>
+                                        {info.hours}
+                                    </span>
+                                </div>
+
+                                {info.note ? (
+                                    <div className="py-1">
+                                        <p className="text-sm text-calm-text font-medium leading-relaxed">
+                                            {info.note}
+                                        </p>
+                                    </div>
+                                ) : (
+                                    <p className="text-sm text-calm-subtext italic py-1">
+                                        {t('status.no_note_plain') || '特記事項なし'}
+                                    </p>
+                                )}
+                            </div>
+                        );
+                    })()}
                 </div>
             </div>
         </div>
