@@ -18,6 +18,7 @@ const ICON_MAP: Record<FacilityId, React.ElementType> = {
     lecture_bldg: School,
     agora_global: Globe,
     cafe_castalia: Croissant,
+    admin_bldg: Building2,
     university_events: Calendar,
 };
 

@@ -16,9 +16,9 @@ const STATUS_Styles = {
 };
 
 const SubDepartment: React.FC<SubDepartmentProps> = ({ id, date, onClick }) => {
-    const { language, t } = useLanguage();
+    const { language } = useLanguage();
     const facility = CONST_SCHEDULE_DATA[id];
-    const { status, nextInfo, hours, statusText } = useFacilityStatus(id, date);
+    const { status, statusText } = useFacilityStatus(id, date);
 
     const name = language === 'ja' ? facility.name : facility.nameEn;
     const style = STATUS_Styles[status] || STATUS_Styles.closed;
@@ -45,7 +45,7 @@ interface AdminBuildingCardProps {
 }
 
 export const AdminBuildingCard: React.FC<AdminBuildingCardProps> = ({ date, onSelectFacility }) => {
-    const { language, t } = useLanguage();
+    const { language } = useLanguage();
     const mainId: FacilityId = 'admin_bldg';
     const mainFacility = CONST_SCHEDULE_DATA[mainId];
     const mainName = language === 'ja' ? mainFacility.name : mainFacility.nameEn;
