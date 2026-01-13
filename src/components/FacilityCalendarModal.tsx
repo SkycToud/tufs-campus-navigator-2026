@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { format, addMonths, subMonths, isToday, getDay, isSameDay, startOfMonth, startOfWeek, endOfMonth, endOfWeek, eachDayOfInterval } from 'date-fns';
+import { useState, useEffect } from 'react';
+import { format, addMonths, subMonths, isToday, getDay, isSameDay } from 'date-fns';
 import { ja, enUS } from 'date-fns/locale';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useMonthlySchedule } from '../hooks/useMonthlySchedule';
