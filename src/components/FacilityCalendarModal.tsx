@@ -57,8 +57,7 @@ export function FacilityCalendarModal({ facilityId, isOpen, onClose }: FacilityC
         ? CONST_SCHEDULE_DATA[facilityId].name
         : CONST_SCHEDULE_DATA[facilityId].nameEn;
 
-    // Get selected day info (for detail area)
-    const selectedDailyInfo = getFacilityDailyInfo(facilityId, currentDate, t, language); // 0=Sun
+
     const emptyCells = Array(getDay(schedule[0].date)).fill(null); // Re-calculate empty cells based on the first day of the schedule
     const locale = language === 'ja' ? ja : enUS;
 
