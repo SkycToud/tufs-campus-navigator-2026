@@ -24,7 +24,7 @@ export const Dashboard: React.FC = () => {
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
                 <section className="space-y-4">
-                    <h2 className="text-sm font-bold text-calm-subtext uppercase tracking-wider pl-2">{t('section.main_facilities')}</h2>
+                    <h2 className="text-sm font-bold text-calm-subtext uppercase tracking-wider pl-2">Main Facilities</h2>
                     <div className="grid gap-3">
                         <FacilityCard
                             facilityId="university_events"
