@@ -109,14 +109,14 @@ export const CONST_SCHEDULE_DATA: Record<FacilityId, FacilityData> = {
         unpublishedFrom: '2026-03-01',
         rules: [
             // Exceptions: Jan 2026
-            Rules.closedRange('2026-01-01', '2026-01-04', '年始休館'),
+            Rules.closedRange('2026-01-01', '2026-01-04', 'note.new_year_holiday'),
             Rules.date('2026-01-16', times('09:00', '17:00')),
-            Rules.closedRange('2026-01-17', '2026-01-18', '大学入学共通テスト（入構制限）'),
+            Rules.closedRange('2026-01-17', '2026-01-18', 'note.common_test'),
 
             // Exceptions: Feb 2026
             Rules.date('2026-02-24', times('09:00', '17:00')),
-            Rules.closedDate('2026-02-25', '二次試験日'),
-            Rules.closedDate('2026-02-27', '指定休館日'),
+            Rules.closedDate('2026-02-25', 'note.entrance_exam'),
+            Rules.closedDate('2026-02-27', 'note.designated_closed'),
 
             // Dynamic Holidays (Closed on national holidays)
             Rules.nationalHoliday(true),
@@ -137,9 +137,9 @@ export const CONST_SCHEDULE_DATA: Record<FacilityId, FacilityData> = {
             Rules.range('2026-01-05', '2026-01-06', HO.LUNCH_STD),
             Rules.date('2026-01-07', HO.LUNCH_SHORT, '短縮営業'),
             Rules.range('2026-01-08', '2026-01-09', HO.LUNCH_STD),
-            Rules.closedRange('2026-01-10', '2026-01-12', '祝日含む'),
+            Rules.closedRange('2026-01-10', '2026-01-12', 'note.includes_holiday'),
             Rules.date('2026-01-13', HO.LUNCH_STD),
-            Rules.date('2026-01-14', HO.LUNCH_SHORT, '短縮営業'),
+            Rules.date('2026-01-14', HO.LUNCH_SHORT, 'note.short_hours'),
             Rules.date('2026-01-15', HO.LUNCH_STD),
             Rules.closedRange('2026-01-16', '2026-01-18'),
             Rules.range('2026-01-19', '2026-01-23', HO.LUNCH_EXAM),
@@ -148,15 +148,15 @@ export const CONST_SCHEDULE_DATA: Record<FacilityId, FacilityData> = {
             Rules.closedDate('2026-01-31'),
 
             // February 2026
-            Rules.closedDate('2026-02-01', '定休日'),
+            Rules.closedDate('2026-02-01', 'note.regular_holiday'),
             Rules.range('2026-02-02', '2026-02-06', times('11:30', '13:00')),
-            Rules.closedDate('2026-02-07', '定休日'),
-            Rules.closedDate('2026-02-08', '定休日'),
+            Rules.closedDate('2026-02-07', 'note.regular_holiday'),
+            Rules.closedDate('2026-02-08', 'note.regular_holiday'),
             Rules.range('2026-02-09', '2026-02-10', times('11:30', '13:00')),
-            Rules.closedDate('2026-02-11', '建国記念の日（祝日）'),
+            Rules.closedDate('2026-02-11', 'note.national_holiday'),
             Rules.range('2026-02-12', '2026-02-13', times('11:30', '13:00')),
-            Rules.closedDate('2026-02-14', '定休日'),
-            Rules.closedDate('2026-02-15', '定休日'),
+            Rules.closedDate('2026-02-14', 'note.regular_holiday'),
+            Rules.closedDate('2026-02-15', 'note.regular_holiday'),
             Rules.range('2026-02-16', '2026-02-20', times('11:30', '13:00')),
             Rules.closedDate('2026-02-21', '定休日'),
             Rules.closedDate('2026-02-22', '定休日'),

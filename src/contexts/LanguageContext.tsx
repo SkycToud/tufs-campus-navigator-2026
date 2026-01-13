@@ -22,14 +22,17 @@ export const translations: Record<string, Record<Language, string>> = {
     // Status
     'status.open': { ja: '営業中', en: 'Open' },
     'status.closed': { ja: '営業時間外', en: 'Closed' },
+    'status.open_main': { ja: '開館', en: 'Open' },
+    'status.closed_main': { ja: '閉館', en: 'Closed' },
     'status.break': { ja: '休憩中', en: 'On Break' },
     'status.closing_soon': { ja: 'もうすぐ終了', en: 'Closing Soon' },
     'status.unknown': { ja: '不明', en: 'Unknown' },
-    'status.unpublished': { ja: '未公表', en: 'Unpublished' },
+    'status.unpublished': { ja: '公開前', en: 'Unpublished' },
     'status.opens_at': { ja: '開館', en: 'Opens at' },
     'status.closes_at': { ja: '閉館', en: 'Closes at' },
     'status.opens_at_shop': { ja: '開店', en: 'Opens at' },
     'status.closes_at_shop': { ja: '閉店', en: 'Closes at' },
+    'status.no_note_plain': { ja: '特記事項なし', en: 'No special notes' },
 
     // DateSelector
     'date.today': { ja: '今日', en: 'Today' },
@@ -49,9 +52,15 @@ export const translations: Record<string, Record<Language, string>> = {
     'note.lunch_only': { ja: '平日ランチのみ', en: 'Weekday Lunch Only' },
     'note.cash_until_15': { ja: '現金受付は15:00まで', en: 'Cash accepted until 15:00' },
     'note.indoor': { ja: '屋内施設', en: 'Indoor Facility' },
-    'note.short_hours': { ja: '短縮開館', en: 'Short Hours' },
-    'note.common_test': { ja: '共通テスト/月末休館', en: 'Closed for Common Test/Month-end' },
+    'note.short_hours': { ja: '短縮営業', en: 'Short Hours' },
+    'note.common_test': { ja: '共通テスト（入構制限）', en: 'Common Test (Restricted Entry)' },
     'note.closed_period': { ja: '期間外閉店', en: 'Closed during this period' },
+    'note.new_year_holiday': { ja: '年始休館', en: "New Year's Holiday" },
+    'note.entrance_exam': { ja: '二次試験日', en: 'Entrance Exam' },
+    'note.designated_closed': { ja: '指定休館日', en: 'Designated Closed Day' },
+    'note.regular_holiday': { ja: '定休日', en: 'Regular Holiday' },
+    'note.includes_holiday': { ja: '祝日含む', en: 'Includes Holiday' },
+    'note.national_holiday': { ja: '祝日', en: 'National Holiday' },
 
     // About Page
     'about.title': { ja: 'アプリについて', en: 'About' },

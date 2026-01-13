@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
-import { format, addMonths, subMonths, isToday, getDay, isSameDay } from 'date-fns';
+import React, { useState, useEffect } from 'react';
+import { format, addMonths, subMonths, isToday, getDay, isSameDay, startOfMonth, startOfWeek, endOfMonth, endOfWeek, eachDayOfInterval } from 'date-fns';
 import { ja, enUS } from 'date-fns/locale';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useMonthlySchedule } from '../hooks/useMonthlySchedule';
 import { CONST_SCHEDULE_DATA, type FacilityId } from '../lib/schedules';
 import { cn } from '../lib/utils';
 import { getFacilityDailyInfo } from '../lib/status-utils';
+import { getNowJST } from '../lib/date';
 import { useLanguage } from '../contexts/LanguageContext';
 
 interface FacilityCalendarModalProps {
@@ -14,16 +15,15 @@ interface FacilityCalendarModalProps {
     onClose: () => void;
 }
 
-export const FacilityCalendarModal: React.FC<FacilityCalendarModalProps> = ({ facilityId, isOpen, onClose }) => {
-    const { language, t } = useLanguage();
-    const [currentMonth, setCurrentMonth] = useState(new Date());
-    const [selectedDate, setSelectedDate] = useState(new Date());
+export function FacilityCalendarModal({ facilityId, isOpen, onClose }: FacilityCalendarModalProps) {
+    const { t, language } = useLanguage();
+    const [currentDate, setCurrentDate] = useState(getNowJST());
 
-    // Prevent background scrolling when modal is open
-    React.useEffect(() => {
+    useEffect(() => {
         if (isOpen) {
             document.body.style.overflow = 'hidden';
-            setSelectedDate(new Date());
+            // Reset to current month when opening
+            setCurrentDate(getNowJST());
         } else {
             document.body.style.overflow = '';
         }
@@ -33,23 +33,33 @@ export const FacilityCalendarModal: React.FC<FacilityCalendarModalProps> = ({ fa
         };
     }, [isOpen]);
 
+    if (!isOpen) return null;
+
+    const facilityData = CONST_SCHEDULE_DATA[facilityId];
+    const monthStart = startOfMonth(currentDate);
+    // Use the calendar starting from Sunday
+    const calendarStart = startOfWeek(monthStart, { weekStartsOn: 0 });
+    const monthEnd = endOfMonth(currentDate);
+    const calendarEnd = endOfWeek(monthEnd, { weekStartsOn: 0 });
+
+    const calendarDays = eachDayOfInterval({ start: calendarStart, end: calendarEnd });
+
+    // Handle Month Navigation
+    const nextMonth = () => setCurrentDate(addMonths(currentDate, 1));
+    const prevMonth = () => setCurrentDate(subMonths(currentDate, 1));
+
     // Always call hook (rules of hooks), but data is relevant only if facilityId exists
     // We pass a dummy ID if null, but prevent rendering
     const validFacilityId = facilityId || 'library';
-    const schedule = useMonthlySchedule(validFacilityId, currentMonth);
-
-    if (!isOpen || !facilityId) return null;
+    const schedule = useMonthlySchedule(validFacilityId, currentDate); // Use currentDate for monthly schedule
 
     const facilityName = language === 'ja'
         ? CONST_SCHEDULE_DATA[facilityId].name
         : CONST_SCHEDULE_DATA[facilityId].nameEn;
 
-    const handlePrevMonth = () => setCurrentMonth(subMonths(currentMonth, 1));
-    const handleNextMonth = () => setCurrentMonth(addMonths(currentMonth, 1));
-
-    // Calendar Grid Logic
-    const startDayOfWeek = getDay(schedule[0].date); // 0=Sun
-    const emptyCells = Array(startDayOfWeek).fill(null);
+    // Get selected day info (for detail area)
+    const selectedDailyInfo = getFacilityDailyInfo(facilityId, currentDate, t, language); // 0=Sun
+    const emptyCells = Array(getDay(schedule[0].date)).fill(null); // Re-calculate empty cells based on the first day of the schedule
     const locale = language === 'ja' ? ja : enUS;
 
     const weekDays = language === 'ja'
@@ -99,13 +109,13 @@ export const FacilityCalendarModal: React.FC<FacilityCalendarModalProps> = ({ fa
 
                     {/* Month Navigation */}
                     <div className="px-4 py-3 flex items-center justify-between text-calm-text border-b border-slate-50">
-                        <button onClick={handlePrevMonth} className="p-1 hover:bg-white/50 rounded-full transition-colors">
+                        <button onClick={prevMonth} className="p-1 hover:bg-white/50 rounded-full transition-colors">
                             <ChevronLeft size={20} />
                         </button>
                         <span className="font-bold text-lg font-mono tracking-tight">
-                            {format(currentMonth, 'yyyy / M', { locale })}
+                            {format(currentDate, 'yyyy / M', { locale })}
                         </span>
-                        <button onClick={handleNextMonth} className="p-1 hover:bg-white/50 rounded-full transition-colors">
+                        <button onClick={nextMonth} className="p-1 hover:bg-white/50 rounded-full transition-colors">
                             <ChevronRight size={20} />
                         </button>
                     </div>
@@ -124,10 +134,10 @@ export const FacilityCalendarModal: React.FC<FacilityCalendarModalProps> = ({ fa
                     <div className="flex-1 overflow-y-auto p-4 scrollbar-thin scrollbar-thumb-slate-200 scrollbar-track-transparent relative">
                         {/* Unpublished Overlay */}
                         {CONST_SCHEDULE_DATA[facilityId]?.unpublishedFrom &&
-                            currentMonth >= new Date(CONST_SCHEDULE_DATA[facilityId].unpublishedFrom!) && (
+                            currentDate >= new Date(CONST_SCHEDULE_DATA[facilityId].unpublishedFrom!) && (
                                 <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-white/60 backdrop-blur-[2px] p-6 text-center animate-in fade-in duration-300">
                                     <div className="bg-white p-4 rounded-2xl shadow-lg border border-slate-100/50">
-                                        <p className="text-calm-subtext font-bold mb-1">{format(currentMonth, 'M月', { locale })}</p>
+                                        <p className="text-calm-subtext font-bold mb-1">{format(currentDate, 'M月', { locale })}</p>
                                         <p className="text-lg font-bold text-calm-text">{t('status.unpublished')}</p>
                                     </div>
                                 </div>
@@ -164,11 +174,12 @@ export const FacilityCalendarModal: React.FC<FacilityCalendarModalProps> = ({ fa
                                     dotClass = getDotColor(day.info.color || 'gray');
                                 }
 
-                                const isSelected = isSameDay(day.date, selectedDate);
+                                const isSelected = isSameDay(day.date, currentDate);
+
                                 return (
                                     <button
                                         key={day.date.toISOString()}
-                                        onClick={() => setSelectedDate(day.date)}
+                                        onClick={() => setCurrentDate(day.date)}
                                         className={cn(
                                             "min-h-[60px] p-1.5 rounded-lg border text-xs relative flex flex-col transition-all text-left",
                                             isCurrentDay && "ring-2 ring-accent ring-offset-1 z-10",
@@ -207,16 +218,16 @@ export const FacilityCalendarModal: React.FC<FacilityCalendarModalProps> = ({ fa
                 {/* Detail Area */}
                 <div className="bg-white/80 backdrop-blur-md rounded-xl p-4 border border-white/50 shadow-sm animate-in slide-in-from-bottom-2 duration-300 sticky bottom-0 z-10 mx-4 mb-4">
                     {(() => {
-                        const info = getFacilityDailyInfo(validFacilityId, selectedDate, t);
+                        const info = getFacilityDailyInfo(validFacilityId, currentDate, t, language);
                         return (
                             <div className="flex flex-col gap-2">
                                 <div className="flex items-baseline justify-between border-b border-slate-100 pb-2">
                                     <div className="flex items-baseline gap-2">
                                         <span className="text-lg font-bold text-calm-text">
-                                            {format(selectedDate, 'M/d', { locale })}
+                                            {format(currentDate, 'M/d', { locale })}
                                         </span>
                                         <span className="text-sm font-bold text-calm-subtext">
-                                            ({format(selectedDate, 'EEE', { locale })})
+                                            ({format(currentDate, 'EEE', { locale })})
                                         </span>
                                     </div>
                                     <span className={`text-sm font-bold px-2 py-0.5 rounded-md ${info.scheduleType === 'closed' ? 'bg-slate-100 text-slate-500' : 'bg-emerald-100 text-emerald-700'}`}>
@@ -240,6 +251,6 @@ export const FacilityCalendarModal: React.FC<FacilityCalendarModalProps> = ({ fa
                     })()}
                 </div>
             </div>
-        </div>
+        </div >
     );
 };

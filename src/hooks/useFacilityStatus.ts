@@ -26,6 +26,7 @@ export function useFacilityStatus(facilityId: FacilityId, date: Date = getNowJST
                 date,
                 now,
                 t,
+                language,
                 isMaintenanceMode
             );
 

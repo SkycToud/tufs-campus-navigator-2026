@@ -22,6 +22,7 @@ export function calculateFacilityStatus(
     date: Date,
     now: Date,
     t: (key: string) => string,
+    language: 'ja' | 'en',
     isMaintenanceMode: boolean
 ): StatusResult {
     // 0. CHECK MAINTENANCE MODE
@@ -45,10 +46,10 @@ export function calculateFacilityStatus(
         if (exception.status === 'closed') {
             return {
                 status: 'closed',
-                statusText: exception.reason || t('status.closed'),
+                statusText: exception.reason ? t(exception.reason) : t('status.closed'),
                 nextChangeText: 'Exceptional Closure',
                 isOpen: false,
-                alert: exception.reason
+                alert: exception.reason ? t(exception.reason) : undefined
             };
         }
     }
@@ -76,8 +77,9 @@ export function calculateFacilityStatus(
             // IMPORTANT: If matchedRule is generic "national_holiday", we probably want to append the holiday name
             if (matchedRule) {
                 // Clone to avoid mutating const, and add holiday name to note if missing
-                const holidayName = holiday_jp.between(date, date)[0]?.name || '祝日';
-                matchedRule = { ...matchedRule, note: matchedRule.note === '祝日' ? holidayName : matchedRule.note };
+                const holidayObj = holiday_jp.between(date, date)[0];
+                const holidayName = language === 'en' && holidayObj?.name_en ? holidayObj.name_en : (holidayObj?.name || '祝日');
+                matchedRule = { ...matchedRule, note: matchedRule.note === 'note.national_holiday' || matchedRule.note === '祝日' ? holidayName : matchedRule.note };
             }
         }
     }
@@ -96,6 +98,23 @@ export function calculateFacilityStatus(
         else matchedRule = rules.find(r => r.type === 'weekday');
     }
 
+    const SHOP_FACILITIES: FacilityId[] = ['cafeteria_1f', 'sabor_2f', 'store', 'cafe_castalia'];
+    const MAIN_FACILITIES: FacilityId[] = ['library', 'lecture_bldg', 'circle_bldg', 'agora_global'];
+
+    let openTextKey = 'status.open';
+    let closedTextKey = 'status.closed';
+    let opensAtKey = 'status.opens_at';
+    let closesAtKey = 'status.closes_at';
+
+    if (SHOP_FACILITIES.includes(facilityId)) {
+        closedTextKey = 'status.closed_shop';
+        opensAtKey = 'status.opens_at_shop';
+        closesAtKey = 'status.closes_at_shop';
+    } else if (MAIN_FACILITIES.includes(facilityId)) {
+        openTextKey = 'status.open_main';
+        closedTextKey = 'status.closed_main';
+    }
+
     // Default to closed if no rule found
     if (!matchedRule || matchedRule.isClosed) {
         // For national holidays, we prefer the standard "Closed" text in the status pill
@@ -105,10 +124,10 @@ export function calculateFacilityStatus(
 
         return {
             status: 'closed',
-            statusText: showNoteInStatus ? matchedRule!.note! : t('status.closed'),
+            statusText: showNoteInStatus ? t(matchedRule!.note!) : t(closedTextKey),
             nextChangeText: 'Next: Check Calendar',
             isOpen: false,
-            alert: matchedRule?.note
+            alert: matchedRule?.note ? t(matchedRule.note) : undefined
         };
     }
 
@@ -117,7 +136,7 @@ export function calculateFacilityStatus(
         const hoursText = matchedRule.hours.map(h => `${h.start}-${h.end}`).join(', ');
         return {
             status: 'closed', // Technically closed right now relative to the user, but open on that day
-            statusText: hoursText || t('status.closed'),
+            statusText: hoursText || t(closedTextKey),
             nextChangeText: '',
             isOpen: false,
             alert: matchedRule.note,
@@ -144,21 +163,16 @@ export function calculateFacilityStatus(
         }
     }
 
-    const SHOP_FACILITIES: FacilityId[] = ['cafeteria_1f', 'sabor_2f', 'store', 'cafe_castalia'];
-    const opensAtKey = SHOP_FACILITIES.includes(facilityId) ? 'status.opens_at_shop' : 'status.opens_at';
-    const closesAtKey = SHOP_FACILITIES.includes(facilityId) ? 'status.closes_at_shop' : 'status.closes_at';
-    const closedTextKey = SHOP_FACILITIES.includes(facilityId) ? 'status.closed_shop' : 'status.closed';
-
     if (currentRange) {
         // OPEN
         const [closeHour, closeMinute] = currentRange.end.split(':').map(Number);
         const closeDate = new Date(nowJST.getFullYear(), nowJST.getMonth(), nowJST.getDate(), closeHour, closeMinute);
         return {
             status: 'open',
-            statusText: t('status.open'),
+            statusText: t(openTextKey),
             nextChangeText: `${t(closesAtKey)} ${format(closeDate, 'H:mm')}`,
             isOpen: true,
-            alert: matchedRule.note,
+            alert: matchedRule.note ? t(matchedRule.note) : undefined,
             hours: currentRange // Export current range
         };
     } else if (isBreak) {
@@ -167,7 +181,7 @@ export function calculateFacilityStatus(
             statusText: t('status.break'),
             nextChangeText: `${t(opensAtKey)} ${nextOpenStart}`,
             isOpen: false,
-            alert: matchedRule.note
+            alert: matchedRule.note ? t(matchedRule.note) : undefined
         };
     } else {
         // Closed (Before start or after end)
@@ -178,7 +192,7 @@ export function calculateFacilityStatus(
                 statusText: t(closedTextKey),
                 nextChangeText: `${t(opensAtKey)} ${nextStart.start}`,
                 isOpen: false,
-                alert: matchedRule.note
+                alert: matchedRule.note ? t(matchedRule.note) : undefined
             };
         } else {
             return {
@@ -186,7 +200,7 @@ export function calculateFacilityStatus(
                 statusText: t(closedTextKey),
                 nextChangeText: '',
                 isOpen: false,
-                alert: matchedRule.note
+                alert: matchedRule.note ? t(matchedRule.note) : undefined
             };
         }
     }
@@ -204,7 +218,8 @@ export interface DailyInfo {
 export function getFacilityDailyInfo(
     facilityId: FacilityId,
     date: Date,
-    t: (key: string) => string
+    t: (key: string) => string,
+    language: 'ja' | 'en'
 ): DailyInfo {
     const dateJSTStr = formatJST(date, 'yyyy-MM-dd');
     const facilityData = CONST_SCHEDULE_DATA[facilityId];
@@ -216,7 +231,7 @@ export function getFacilityDailyInfo(
             return {
                 scheduleType: 'closed',
                 hours: t('status.closed'), // or exception.reason
-                note: exception.reason,
+                note: exception.reason ? t(exception.reason) : undefined,
                 color: 'gray'
             };
         }
@@ -226,7 +241,7 @@ export function getFacilityDailyInfo(
             return {
                 scheduleType: 'irregular',
                 hours: hoursText,
-                note: exception.reason,
+                note: exception.reason ? t(exception.reason) : undefined,
                 color: 'pink'
             };
         }
@@ -250,8 +265,9 @@ export function getFacilityDailyInfo(
             matchedRule = rules.find(r => r.type === 'national_holiday');
             if (matchedRule) {
                 ruleType = 'national_holiday';
-                const holidayName = holiday_jp.between(date, date)[0]?.name || '祝日';
-                matchedRule = { ...matchedRule, note: matchedRule.note === '祝日' ? holidayName : matchedRule.note };
+                const holidayObj = holiday_jp.between(date, date)[0];
+                const holidayName = language === 'en' && holidayObj?.name_en ? holidayObj.name_en : (holidayObj?.name || '祝日');
+                matchedRule = { ...matchedRule, note: matchedRule.note === 'note.national_holiday' || matchedRule.note === '祝日' ? holidayName : matchedRule.note };
             }
         }
     }
@@ -271,12 +287,23 @@ export function getFacilityDailyInfo(
         else { matchedRule = rules.find(r => r.type === 'weekday'); ruleType = 'weekday'; }
     }
 
+    // List of facilities that should use "閉店" (Closed Shop) instead of "閉館" (Closed Building)
+    const SHOP_FACILITIES: FacilityId[] = ['cafeteria_1f', 'sabor_2f', 'store', 'cafe_castalia'];
+    const MAIN_FACILITIES: FacilityId[] = ['library', 'lecture_bldg', 'circle_bldg', 'agora_global'];
+
+    let closedTextKey = 'status.closed';
+    if (SHOP_FACILITIES.includes(facilityId)) {
+        closedTextKey = 'status.closed_shop';
+    } else if (MAIN_FACILITIES.includes(facilityId)) {
+        closedTextKey = 'status.closed_main';
+    }
+
     // Default to closed if no rule found
     if (!matchedRule || matchedRule.isClosed) {
         return {
             scheduleType: 'closed',
-            hours: t('status.closed'),
-            note: matchedRule?.note,
+            hours: t(closedTextKey),
+            note: matchedRule?.note ? t(matchedRule.note) : undefined,
             color: 'gray'
         };
     }
@@ -329,7 +356,7 @@ export function getFacilityDailyInfo(
     return {
         scheduleType,
         hours: hoursText,
-        note: matchedRule.note,
+        note: matchedRule.note ? t(matchedRule.note) : undefined,
         color
     };
 }
