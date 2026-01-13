@@ -105,7 +105,7 @@ export function calculateFacilityStatus(
 
         return {
             status: 'closed',
-            statusText: showNoteInStatus ? matchedRule.note! : t('status.closed'),
+            statusText: showNoteInStatus ? matchedRule!.note! : t('status.closed'),
             nextChangeText: 'Next: Check Calendar',
             isOpen: false,
             alert: matchedRule?.note
