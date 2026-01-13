@@ -94,17 +94,11 @@ const COMMON_ADMIN_RULES: ScheduleRule[] = [
     // Exceptions: New Year
     Rules.closedRange('2026-01-01', '2026-01-04', '年始休業'),
 
-    // Holidays (2026 Jan-Mar)
-    Rules.closedDate('2026-01-12', '成人の日'),
-    Rules.closedDate('2026-02-11', '建国記念の日'),
-    Rules.closedDate('2026-02-23', '天皇誕生日'),
-    Rules.closedDate('2026-03-20', '春分の日'), // Graduation ceremony is usually open, but as Admin logic requested: closed on holidays.
-    // Note: Graduation is 3/20. If it's a holiday, Admin is usually closed unless specific exception. 
-    // User requested "Apply Admin holiday schedule", so 3/20 is closed.
+    // Automatic Holiday Rule
+    Rules.nationalHoliday(true),
 
     // Weekends are closed
-    Rules.subWeekday('saturday', [], true),
-    Rules.subWeekday('sunday', [], true),
+    ...Rules.closedWeekends(),
 ];
 
 export const CONST_SCHEDULE_DATA: Record<FacilityId, FacilityData> = {
@@ -114,42 +108,20 @@ export const CONST_SCHEDULE_DATA: Record<FacilityId, FacilityData> = {
         category: 'facility',
         unpublishedFrom: '2026-03-01',
         rules: [
+            // Exceptions: Jan 2026
             Rules.closedRange('2026-01-01', '2026-01-04', '年始休館'),
-            Rules.date('2026-01-05', HO.DEFAULT, '授業再開'),
-            Rules.range('2026-01-06', '2026-01-09', HO.DEFAULT),
-            Rules.date('2026-01-10', times('13:00', '20:00')),
-            Rules.closedRange('2026-01-11', '2026-01-12', '日曜・祝日休館'),
-            Rules.date('2026-01-13', HO.DEFAULT),
-            Rules.range('2026-01-14', '2026-01-15', HO.DEFAULT),
             Rules.date('2026-01-16', times('09:00', '17:00')),
             Rules.closedRange('2026-01-17', '2026-01-18', '大学入学共通テスト（入構制限）'),
-            Rules.range('2026-01-19', '2026-01-23', HO.DEFAULT),
-            Rules.date('2026-01-24', times('13:00', '20:00')),
-            Rules.closedDate('2026-01-25', '日曜休館'),
-            Rules.date('2026-01-26', HO.DEFAULT, '冬学期開始'),
-            Rules.range('2026-01-27', '2026-01-30', HO.DEFAULT),
-            Rules.date('2026-01-31', times('13:00', '20:00')),
 
-            // February 2026
-            Rules.closedDate('2026-02-01', '日曜休館'),
-            Rules.range('2026-02-02', '2026-02-06', HO.DEFAULT),
-            Rules.date('2026-02-07', times('13:00', '20:00')),
-            Rules.closedDate('2026-02-08', '日曜休館'),
-            Rules.range('2026-02-09', '2026-02-10', HO.DEFAULT),
-            Rules.closedDate('2026-02-11', '建国記念の日'),
-            Rules.range('2026-02-12', '2026-02-13', HO.DEFAULT),
-            Rules.date('2026-02-14', times('13:00', '20:00')),
-            Rules.closedDate('2026-02-15', '日曜休館'),
-            Rules.range('2026-02-16', '2026-02-20', HO.DEFAULT),
-            Rules.date('2026-02-21', times('13:00', '20:00')),
-            Rules.closedDate('2026-02-22', '日曜休館'),
-            Rules.closedDate('2026-02-23', '天皇誕生日'),
+            // Exceptions: Feb 2026
             Rules.date('2026-02-24', times('09:00', '17:00')),
             Rules.closedDate('2026-02-25', '二次試験日'),
-            Rules.date('2026-02-26', HO.DEFAULT),
             Rules.closedDate('2026-02-27', '指定休館日'),
-            Rules.date('2026-02-28', times('13:00', '20:00')),
-            // Fallbacks
+
+            // Dynamic Holidays (Closed on national holidays)
+            Rules.nationalHoliday(true),
+
+            // Default Logic
             Rules.weekday(HO.DEFAULT),
             Rules.subWeekday('saturday', times('13:00', '20:00')),
             Rules.subWeekday('sunday', [], true),

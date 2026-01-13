@@ -5,6 +5,7 @@ import { AdminBuildingCard } from './AdminBuildingCard';
 import { type FacilityId } from '../lib/schedules';
 import { useLanguage } from '../contexts/LanguageContext';
 import { FacilityCalendarModal } from './FacilityCalendarModal';
+import { DebugTimeBanner } from './DebugTimeBanner';
 
 import { getNowJST } from '../lib/date';
 
@@ -16,6 +17,7 @@ export const Dashboard: React.FC = () => {
 
     return (
         <div className="p-4 sm:p-6 lg:p-8 max-w-screen-lg mx-auto">
+            <DebugTimeBanner />
             <div className="flex flex-col sm:flex-row sm:justify-center sm:items-center mb-6">
                 <DateSelector currentDate={date} onDateChange={setDate} />
             </div>

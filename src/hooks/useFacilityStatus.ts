@@ -7,7 +7,7 @@ import { calculateFacilityStatus, type StatusResult, type FacilityStatus } from 
 
 export type { FacilityStatus, StatusResult };
 
-export function useFacilityStatus(facilityId: FacilityId, date: Date = new Date()): StatusResult {
+export function useFacilityStatus(facilityId: FacilityId, date: Date = getNowJST()): StatusResult {
     const { t, language } = useLanguage();
     const { isMaintenanceMode } = useMaintenance();
     const [result, setResult] = useState<StatusResult>({

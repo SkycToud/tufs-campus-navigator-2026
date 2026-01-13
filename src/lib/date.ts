@@ -11,8 +11,33 @@ export const TIMEZONE = 'Asia/Tokyo';
  * Best practice: Use this "zoned" date primarily for extracting components 
  * assuming the environment is now "in" that timezone, or use formatJST.
  */
+// Returns the current time, possibly mocked via URL parameter ?mockDate=YYYY-MM-DDTHH:mm
+export function getCurrentTime(): Date {
+    if (typeof window !== 'undefined') {
+        const params = new URLSearchParams(window.location.search);
+        const mockDateFunc = params.get('mockDate');
+        if (mockDateFunc) {
+            const parsed = new Date(mockDateFunc);
+            if (!isNaN(parsed.getTime())) {
+                return parsed;
+            }
+        }
+    }
+    return new Date();
+}
+
+export function isMockMode(): boolean {
+    if (typeof window !== 'undefined') {
+        const params = new URLSearchParams(window.location.search);
+        return !!params.get('mockDate');
+    }
+    return false;
+}
+
 export function getNowJST(): Date {
-    return toZonedTime(new Date(), TIMEZONE);
+    // Current approach uses system time but assumes it's JST or handled as JST in logic.
+    // We replace the source of truth with getCurrentTime().
+    return toZonedTime(getCurrentTime(), TIMEZONE);
 }
 
 /**
