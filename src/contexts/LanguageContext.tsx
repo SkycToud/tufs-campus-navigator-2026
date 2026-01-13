@@ -28,6 +28,8 @@ export const translations: Record<string, Record<Language, string>> = {
     'status.unpublished': { ja: '未公表', en: 'Unpublished' },
     'status.opens_at': { ja: '開館', en: 'Opens at' },
     'status.closes_at': { ja: '閉館', en: 'Closes at' },
+    'status.opens_at_shop': { ja: '開店', en: 'Opens at' },
+    'status.closes_at_shop': { ja: '閉店', en: 'Closes at' },
 
     // DateSelector
     'date.today': { ja: '今日', en: 'Today' },

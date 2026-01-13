@@ -144,6 +144,11 @@ export function calculateFacilityStatus(
         }
     }
 
+    const SHOP_FACILITIES: FacilityId[] = ['cafeteria_1f', 'sabor_2f', 'store', 'cafe_castalia'];
+    const opensAtKey = SHOP_FACILITIES.includes(facilityId) ? 'status.opens_at_shop' : 'status.opens_at';
+    const closesAtKey = SHOP_FACILITIES.includes(facilityId) ? 'status.closes_at_shop' : 'status.closes_at';
+    const closedTextKey = SHOP_FACILITIES.includes(facilityId) ? 'status.closed_shop' : 'status.closed';
+
     if (currentRange) {
         // OPEN
         const [closeHour, closeMinute] = currentRange.end.split(':').map(Number);
@@ -151,7 +156,7 @@ export function calculateFacilityStatus(
         return {
             status: 'open',
             statusText: t('status.open'),
-            nextChangeText: `${t('status.closes_at')} ${format(closeDate, 'H:mm')}`,
+            nextChangeText: `${t(closesAtKey)} ${format(closeDate, 'H:mm')}`,
             isOpen: true,
             alert: matchedRule.note,
             hours: currentRange // Export current range
@@ -160,7 +165,7 @@ export function calculateFacilityStatus(
         return {
             status: 'break',
             statusText: t('status.break'),
-            nextChangeText: `${t('status.opens_at')} ${nextOpenStart}`,
+            nextChangeText: `${t(opensAtKey)} ${nextOpenStart}`,
             isOpen: false,
             alert: matchedRule.note
         };
@@ -170,15 +175,15 @@ export function calculateFacilityStatus(
         if (nextStart) {
             return {
                 status: 'closed',
-                statusText: t('status.closed'),
-                nextChangeText: `${t('status.opens_at')} ${nextStart.start}`,
+                statusText: t(closedTextKey),
+                nextChangeText: `${t(opensAtKey)} ${nextStart.start}`,
                 isOpen: false,
                 alert: matchedRule.note
             };
         } else {
             return {
                 status: 'closed',
-                statusText: t('status.closed'),
+                statusText: t(closedTextKey),
                 nextChangeText: '',
                 isOpen: false,
                 alert: matchedRule.note
