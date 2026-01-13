@@ -35,7 +35,11 @@ export function FacilityCalendarModal({ facilityId, isOpen, onClose }: FacilityC
 
     if (!isOpen) return null;
 
-    const facilityData = CONST_SCHEDULE_DATA[facilityId];
+    // Always call hook (rules of hooks), but data is relevant only if facilityId exists
+    // We pass a dummy ID if null, but prevent rendering
+    const validFacilityId = facilityId || 'library';
+    const facilityData = CONST_SCHEDULE_DATA[validFacilityId];
+
     const monthStart = startOfMonth(currentDate);
     // Use the calendar starting from Sunday
     const calendarStart = startOfWeek(monthStart, { weekStartsOn: 0 });
@@ -48,14 +52,11 @@ export function FacilityCalendarModal({ facilityId, isOpen, onClose }: FacilityC
     const nextMonth = () => setCurrentDate(addMonths(currentDate, 1));
     const prevMonth = () => setCurrentDate(subMonths(currentDate, 1));
 
-    // Always call hook (rules of hooks), but data is relevant only if facilityId exists
-    // We pass a dummy ID if null, but prevent rendering
-    const validFacilityId = facilityId || 'library';
     const schedule = useMonthlySchedule(validFacilityId, currentDate); // Use currentDate for monthly schedule
 
     const facilityName = language === 'ja'
-        ? CONST_SCHEDULE_DATA[facilityId].name
-        : CONST_SCHEDULE_DATA[facilityId].nameEn;
+        ? CONST_SCHEDULE_DATA[validFacilityId].name
+        : CONST_SCHEDULE_DATA[validFacilityId].nameEn;
 
 
     const emptyCells = Array(getDay(schedule[0].date)).fill(null); // Re-calculate empty cells based on the first day of the schedule
@@ -132,8 +133,8 @@ export function FacilityCalendarModal({ facilityId, isOpen, onClose }: FacilityC
                     {/* Scrollable Content */}
                     <div className="flex-1 overflow-y-auto p-4 scrollbar-thin scrollbar-thumb-slate-200 scrollbar-track-transparent relative">
                         {/* Unpublished Overlay */}
-                        {CONST_SCHEDULE_DATA[facilityId]?.unpublishedFrom &&
-                            currentDate >= new Date(CONST_SCHEDULE_DATA[facilityId].unpublishedFrom!) && (
+                        {CONST_SCHEDULE_DATA[validFacilityId]?.unpublishedFrom &&
+                            currentDate >= new Date(CONST_SCHEDULE_DATA[validFacilityId].unpublishedFrom!) && (
                                 <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-white/60 backdrop-blur-[2px] p-6 text-center animate-in fade-in duration-300">
                                     <div className="bg-white p-4 rounded-2xl shadow-lg border border-slate-100/50">
                                         <p className="text-calm-subtext font-bold mb-1">{format(currentDate, 'M月', { locale })}</p>
