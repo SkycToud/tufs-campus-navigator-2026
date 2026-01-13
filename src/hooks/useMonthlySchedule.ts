@@ -10,7 +10,7 @@ export interface DailySchedule {
 }
 
 export function useMonthlySchedule(facilityId: FacilityId, month: Date): DailySchedule[] {
-    const { t } = useLanguage();
+    const { t, language } = useLanguage();
     const { isMaintenanceMode } = useMaintenance();
 
     // Calculate days in the month
@@ -34,7 +34,8 @@ export function useMonthlySchedule(facilityId: FacilityId, month: Date): DailySc
         const result = getFacilityDailyInfo(
             facilityId,
             day,
-            t
+            t,
+            language
         );
 
         return {
