@@ -38,15 +38,7 @@ export function FacilityCalendarModal({ facilityId, isOpen, onClose }: FacilityC
     // Always call hook (rules of hooks), but data is relevant only if facilityId exists
     // We pass a dummy ID if null, but prevent rendering
     const validFacilityId = facilityId || 'library';
-    const facilityData = CONST_SCHEDULE_DATA[validFacilityId];
 
-    const monthStart = startOfMonth(currentDate);
-    // Use the calendar starting from Sunday
-    const calendarStart = startOfWeek(monthStart, { weekStartsOn: 0 });
-    const monthEnd = endOfMonth(currentDate);
-    const calendarEnd = endOfWeek(monthEnd, { weekStartsOn: 0 });
-
-    const calendarDays = eachDayOfInterval({ start: calendarStart, end: calendarEnd });
 
     // Handle Month Navigation
     const nextMonth = () => setCurrentDate(addMonths(currentDate, 1));
