@@ -1,4 +1,4 @@
-import { toZonedTime, formatInTimeZone } from 'date-fns-tz';
+import { formatInTimeZone } from 'date-fns-tz';
 import { type Locale } from 'date-fns';
 
 export const TIMEZONE = 'Asia/Tokyo';
@@ -37,7 +37,9 @@ export function isMockMode(): boolean {
 export function getNowJST(): Date {
     // Current approach uses system time but assumes it's JST or handled as JST in logic.
     // We replace the source of truth with getCurrentTime().
-    return toZonedTime(getCurrentTime(), TIMEZONE);
+    // Note: Do NOT use toZonedTime here if we use formatInTimeZone later (which formatJST does).
+    // Doing so would cause a double-shift (e.g. +9h + 9h).
+    return getCurrentTime();
 }
 
 /**
