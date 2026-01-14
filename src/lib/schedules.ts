@@ -196,9 +196,9 @@ export const CONST_SCHEDULE_DATA: Record<FacilityId, FacilityData> = {
         unpublishedFrom: '2026-04-01',
         rules: [
             Rules.closedRange('2026-01-01', '2026-01-04', '年始休業'),
-            Rules.range('2026-01-05', '2026-01-09', HO.LUNCH_STD, '11:00-13:00（食事メニュー提供）、11:00-14:30（焼き立てパン販売）'),
+            Rules.range('2026-01-05', '2026-01-09', HO.LUNCH_STD, 'note.sabor_special'),
             Rules.closedRange('2026-01-10', '2026-01-12'),
-            Rules.range('2026-01-13', '2026-01-15', HO.LUNCH_STD, '11:00-13:00（食事メニュー提供）、11:00-14:30（焼き立てパン販売）'),
+            Rules.range('2026-01-13', '2026-01-15', HO.LUNCH_STD, 'note.sabor_special'),
             Rules.closedRange('2026-01-16', '2026-01-31', '1月末まで休業'),
 
             // February 2026
@@ -391,8 +391,9 @@ export const CONST_SCHEDULE_DATA: Record<FacilityId, FacilityData> = {
             Rules.date('2026-01-09', [], '履修登録･修正期間(冬学期) / 卒業論文・卒業研究 提出締切'),
             Rules.date('2026-01-13', [], '金曜授業実施日'),
             Rules.date('2026-01-15', [], '秋学期授業終了'),
-            Rules.closedDate('2026-01-16', '全学臨時休講'),
-            Rules.closedRange('2026-01-17', '2026-01-18', '全学臨時休講 (共通テスト)'),
+            Rules.date('2026-01-15', [], '秋学期授業終了'),
+            Rules.closedDate('2026-01-16', 'note.class_cancellation'),
+            Rules.closedRange('2026-01-17', '2026-01-18', 'note.class_cancellation'), // Simplified or use custom if strictly needed
             Rules.range('2026-01-19', '2026-01-23', [], '秋学期 定期試験期間'),
             Rules.date('2026-01-26', [], '冬学期 授業開始'),
 
@@ -405,12 +406,12 @@ export const CONST_SCHEDULE_DATA: Record<FacilityId, FacilityData> = {
             Rules.range('2026-02-17', '2026-02-19', [], '冬学期成績問い合わせ期間'),
             Rules.date('2026-02-20', [], '冬学期成績問い合わせ期限(~16:30)'),
 
-            Rules.closedDate('2026-02-24', '全学臨時休講（入構制限）'),
+            Rules.closedDate('2026-02-24', 'note.class_cancellation_restricted'),
             Rules.closedDate('2026-02-25', '第2次学力試験（前期）/ 入構制限'),
             // Removed 卒業予定者発表 as requested
 
             // March 2026
-            Rules.closedRange('2026-03-11', '2026-03-12', '全学臨時休講（入構制限）'),
+            Rules.closedRange('2026-03-11', '2026-03-12', 'note.class_cancellation_restricted'),
             Rules.date('2026-03-12', [], '第2次学力試験（後期）'), // Note: already covered by closed range but good to be explicit text? 
             // Actually closedRange takes precedence usually, but date might overwrite if later? 
             // Better to combine text in the range or use date for note.

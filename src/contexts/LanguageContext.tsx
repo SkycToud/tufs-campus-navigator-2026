@@ -32,6 +32,7 @@ export const translations: Record<string, Record<Language, string>> = {
     'status.closes_at': { ja: '閉館', en: 'Closes at' },
     'status.opens_at_shop': { ja: '開店', en: 'Opens at' },
     'status.closes_at_shop': { ja: '閉店', en: 'Closes at' },
+    'status.closed_shop': { ja: '営業時間外', en: 'Closed' },
     'status.no_note_plain': { ja: '特記事項なし', en: 'No special notes' },
 
     // DateSelector
@@ -61,6 +62,11 @@ export const translations: Record<string, Record<Language, string>> = {
     'note.regular_holiday': { ja: '定休日', en: 'Regular Holiday' },
     'note.includes_holiday': { ja: '祝日含む', en: 'Includes Holiday' },
     'note.national_holiday': { ja: '祝日', en: 'National Holiday' },
+    'note.meal_provides': { ja: '食事メニュー提供', en: 'Meal Service Available' },
+    'note.fresh_bread': { ja: '焼き立てパン販売', en: 'Freshly Baked Bread Sales' },
+    'note.class_cancellation': { ja: '全学臨時休講', en: 'University-wide Class Cancellation' },
+    'note.class_cancellation_restricted': { ja: '全学臨時休講（入構制限）', en: 'University-wide Class Cancellation (Restricted Entry)' },
+    'note.sabor_special': { ja: '11:00-13:00（食事メニュー提供）、11:00-14:30（焼き立てパン販売）', en: '11:00-13:00 (Meal Service), 11:00-14:30 (Fresh Bread)' },
 
     // About Page
     'about.title': { ja: 'アプリについて', en: 'About' },
