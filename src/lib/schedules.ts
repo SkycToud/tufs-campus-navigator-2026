@@ -101,6 +101,56 @@ const COMMON_ADMIN_RULES: ScheduleRule[] = [
     ...Rules.closedWeekends(),
 ];
 
+// 1. Define University Events Rules first
+const UNIVERSITY_EVENTS_RULES: ScheduleRule[] = [
+    Rules.date('2026-01-05', [], '授業再開'),
+    Rules.date('2026-01-08', [], '履修登録･修正期間(冬学期)'),
+    Rules.date('2026-01-09', [], '履修登録･修正期間(冬学期) / 卒業論文・卒業研究 提出締切'),
+    Rules.date('2026-01-13', [], '金曜授業実施日'),
+    Rules.date('2026-01-15', [], '秋学期授業終了'),
+    Rules.date('2026-01-15', [], '秋学期授業終了'),
+    Rules.closedDate('2026-01-16', 'note.class_cancellation_restricted'),
+    Rules.closedRange('2026-01-17', '2026-01-18', 'note.class_cancellation_restricted'), // Simplified or use custom if strictly needed
+    Rules.range('2026-01-19', '2026-01-23', [], '秋学期 定期試験期間'),
+    Rules.date('2026-01-26', [], '冬学期 授業開始'),
+
+    // February 2026
+    Rules.date('2026-02-02', [], '秋学期成績Web閲覧開始(9:00) / 問い合わせ期間開始'),
+    Rules.range('2026-02-03', '2026-02-05', [], '秋学期成績問い合わせ期間'),
+    Rules.date('2026-02-06', [], '冬学期 授業終了 / 秋学期成績問い合わせ期限(~16:30)'),
+
+    Rules.date('2026-02-16', [], '冬学期成績Web閲覧開始(9:00) / 問い合わせ期間開始'),
+    Rules.range('2026-02-17', '2026-02-19', [], '冬学期成績問い合わせ期間'),
+    Rules.date('2026-02-20', [], '冬学期成績問い合わせ期限(~16:30)'),
+
+    Rules.closedDate('2026-02-24', 'note.class_cancellation_restricted'),
+    Rules.closedDate('2026-02-25', '第2次学力試験（前期）/ 入構制限'),
+
+    // March 2026
+    Rules.closedRange('2026-03-11', '2026-03-12', 'note.class_cancellation_restricted'),
+    Rules.date('2026-03-12', [], '第2次学力試験（後期）'),
+
+    Rules.range('2026-03-11', '2026-03-20', [], '卒業者・進級者発表'), // Mid Mar (approx)
+    Rules.date('2026-03-20', [], '卒業式（学位記授与式）'),
+    Rules.date('2026-03-31', [], '学年終わり'),
+
+    // Fallbacks
+    Rules.weekday([], ''),
+    Rules.subWeekday('saturday', [], false),
+    Rules.subWeekday('sunday', [], false),
+];
+
+// 2. Automatically derive restricted entry rules for Lecture Building
+const RESTRICTED_ENTRY_RULES = UNIVERSITY_EVENTS_RULES.filter((r) => {
+    if (!r.note) return false;
+    // Check for specific translation key OR literal "入構制限"
+    return r.note === 'note.class_cancellation_restricted' || r.note.includes('入構制限');
+}).map(r => ({
+    ...r,
+    isClosed: true, // Force close
+    // Maintain original note
+}));
+
 export const CONST_SCHEDULE_DATA: Record<FacilityId, FacilityData> = {
     library: {
         name: '附属図書館',
