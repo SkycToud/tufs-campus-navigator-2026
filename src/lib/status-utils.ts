@@ -122,7 +122,7 @@ export function calculateFacilityStatus(
         return {
             status: 'closed',
             statusText: t(closedTextKey),
-            nextChangeText: 'Next: Check Calendar',
+            nextChangeText: '',
             isOpen: false,
             alert: matchedRule?.note ? t(matchedRule.note) : undefined
         };
