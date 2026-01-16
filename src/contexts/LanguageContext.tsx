@@ -72,8 +72,8 @@ export const translations: Record<string, Record<Language, string>> = {
     'about.title': { ja: 'アプリについて', en: 'About' },
     'about.disclaimer_title': { ja: '免責事項 (Beta版)', en: 'Disclaimer (Beta)' },
     'about.disclaimer_text': {
-        ja: '本アプリは個人が開発・運営する非公式のベータ版です。\n\nデータの正確性について: 本アプリは外部サイト（大学公式サイト等）のデータを参照し、独自のロジックで判定を行っています。そのため、元データが未公開の場合や、学事予定が急遽変更された場合、表示内容に誤りが生じる可能性が高いことをあらかじめご了承ください。\n\n公式サイトの確認: 重要な予定がある場合は、必ず各施設の公式サイトおよび掲示板を併せてご確認ください。\n\n責任の所在: 本アプリの利用により生じた不利益や損害について、開発者は一切の責任を負いかねます。',
-        en: 'This is an unofficial beta app.\n\nData Accuracy: This app determines schedules based on external data (official sites, etc.) using custom logic. Please note that errors may occur if original data is unpublished or schedules change suddenly.\n\nOfficial Verification: For important events, please always verify with official websites and bulletin boards.\n\nLiability: The developer assumes no responsibility for any disadvantages or damages arising from the use of this app.'
+        ja: '本アプリについて\n本アプリは、個人が開発・運営を行っている非公式のサービスです。\n\n情報の正確性について\n本アプリは、大学公式サイト等の外部データを参照し、独自のロジックを用いて情報を表示しています。システムの運用には万全を期しておりますが、元データの更新遅延や学事予定の急な変更により、実際の状況と異なる情報が表示される可能性があります。あらかじめご了承ください。\n\n公式サイトの確認\n重要な予定や正確な時間を確認する必要がある場合は、必ず各施設・大学の公式サイトおよび掲示板を併せてご確認ください。\n\n免責事項\n本アプリの利用により生じた不利益や損害について、開発者は一切の責任を負いかねます。利用者自身の判断と責任においてご利用ください。',
+        en: 'About App\nThis is an unofficial service developed and operated by an individual.\n\nData Accuracy\nThis app references external data (official university websites, etc.) and uses custom logic to display information. While we strive to ensure system accuracy, please note that information may differ from actual status due to delays in data updates or sudden changes in academic schedules.\n\nOfficial Verification\nFor important schedules or precise times, please ensure to check the official websites and bulletin boards of each facility/university.\n\nDisclaimer\nThe developer assumes no responsibility for any disadvantages or damages arising from the use of this app. Please use it at your own discretion and responsibility.'
     },
     'about.last_updated': { ja: 'データ最終更新日', en: 'Data Last Updated' },
     'about.stale_warning': { ja: '※古い情報が含まれている可能性があります', en: '※Data may be outdated' },
@@ -95,7 +95,7 @@ export const translations: Record<string, Record<Language, string>> = {
 
     // First Visit Modal
     'first_visit.title': { ja: 'ご利用前の確認', en: 'Important Notice' },
-    'first_visit.text': { ja: '本アプリは外部サイトのデータを参照しています。元データが未公開の場合は誤りが生じる可能性が高いことをご了承ください。', en: 'This app references data from external sites. Please note that errors are highly likely if the original data is unpublished.' },
+    'first_visit.text': { ja: '本アプリは外部データを参照しています。取得タイミングや元データの公開状況により、正確性を保証できない場合があります。', en: 'This app references external data. Accuracy cannot be guaranteed depending on data retrieval timing or availability.' },
     'first_visit.disagree': { ja: '了解しない', en: 'Disagree' },
     'first_visit.agree': { ja: '了解', en: 'Agree' },
 };

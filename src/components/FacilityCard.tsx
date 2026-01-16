@@ -124,7 +124,7 @@ export const FacilityCard: React.FC<FacilityCardProps> = ({ facilityId, date, co
 
             <div className="mt-1 flex items-end justify-between">
                 <div className="flex flex-col min-w-0 w-full">
-                    <span className="text-sm font-semibold text-slate-700 break-words">{nextChangeText || 'See details'}</span>
+                    <span className="text-sm font-semibold text-slate-700 break-words">{nextChangeText}</span>
                 </div>
             </div>
 
