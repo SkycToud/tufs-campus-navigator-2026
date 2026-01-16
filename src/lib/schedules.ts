@@ -72,7 +72,7 @@ const Rules = {
 // Common Hours
 const HO = {
     DEFAULT: times('09:00', '20:00'),
-    EARLY_LATE: times('07:00', '20:00'),
+    EARLY_LATE: times('08:00', '20:00'),
     LUNCH_STD: times('11:00', '14:30'),
     LUNCH_SHORT: times('11:00', '13:30'),
     LUNCH_EXAM: times('11:30', '13:30'),
