@@ -370,6 +370,7 @@ export const CONST_SCHEDULE_DATA: Record<FacilityId, FacilityData> = {
         category: 'facility',
         unpublishedFrom: '2026-04-01',
         rules: [
+            ...RESTRICTED_ENTRY_RULES,
             Rules.weekday(HO.EARLY_LATE),
             Rules.subWeekday('saturday', HO.EARLY_LATE),
             Rules.subWeekday('sunday', HO.EARLY_LATE),
@@ -416,6 +417,7 @@ export const CONST_SCHEDULE_DATA: Record<FacilityId, FacilityData> = {
         category: 'facility',
         unpublishedFrom: '2026-04-01',
         rules: [
+            ...RESTRICTED_ENTRY_RULES,
             Rules.weekday(HO.EARLY_LATE),
             Rules.subWeekday('saturday', [], true),
             Rules.subWeekday('sunday', [], true),
