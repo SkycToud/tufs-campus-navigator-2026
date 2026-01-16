@@ -116,15 +116,12 @@ export function calculateFacilityStatus(
     }
 
     // Default to closed if no rule found
+    // Always show the standard "Closed" text in the status pill.
+    // The note will be displayed in the alert section below.
     if (!matchedRule || matchedRule.isClosed) {
-        // For national holidays, we prefer the standard "Closed" text in the status pill
-        // instead of the specific holiday name (which goes to alert/note).
-        // For other custom closed dates (e.g. "Entrance Exam"), we keep showing the note.
-        const showNoteInStatus = matchedRule?.note && matchedRule.type !== 'national_holiday';
-
         return {
             status: 'closed',
-            statusText: showNoteInStatus ? t(matchedRule!.note!) : t(closedTextKey),
+            statusText: t(closedTextKey),
             nextChangeText: 'Next: Check Calendar',
             isOpen: false,
             alert: matchedRule?.note ? t(matchedRule.note) : undefined
