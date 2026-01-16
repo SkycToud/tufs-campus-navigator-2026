@@ -1,3 +1,4 @@
+import React from 'react';
 import { type FacilityId, CONST_SCHEDULE_DATA } from '../lib/schedules';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useFacilityStatus } from '../hooks/useFacilityStatus';
@@ -33,7 +34,18 @@ const SubDepartment: React.FC<SubDepartmentProps> = ({ id, date, onClick }) => {
             </span>
             <div className={`flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold border ${style.bg} ${style.text} ${style.border}`}>
                 <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${style.dot}`} />
-                <span className="leading-none">{statusText}</span>
+                <span className="leading-tight text-right">
+                    {statusText.split(', ').map((part, index, array) => (
+                        <React.Fragment key={index}>
+                            {part}
+                            {index < array.length - 1 && (
+                                <>
+                                    ,<br className="hidden sm:inline" />
+                                </>
+                            )}
+                        </React.Fragment>
+                    ))}
+                </span>
             </div>
         </button>
     );
