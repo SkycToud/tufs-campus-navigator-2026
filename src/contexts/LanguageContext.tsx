@@ -70,10 +70,26 @@ export const translations: Record<string, Record<Language, string>> = {
 
     // About Page
     'about.title': { ja: 'アプリについて', en: 'About' },
-    'about.disclaimer_title': { ja: '免責事項 (Beta版)', en: 'Disclaimer (Beta)' },
-    'about.disclaimer_text': {
-        ja: '本アプリについて\n本アプリは、個人が開発・運営を行っている非公式のサービスです。\n\n情報の正確性について\n本アプリは、大学公式サイト等の外部データを参照し、独自のロジックを用いて情報を表示しています。システムの運用には万全を期しておりますが、元データの更新遅延や学事予定の急な変更により、実際の状況と異なる情報が表示される可能性があります。あらかじめご了承ください。\n\n公式サイトの確認\n重要な予定や正確な時間を確認する必要がある場合は、必ず各施設・大学の公式サイトおよび掲示板を併せてご確認ください。\n\n免責事項\n本アプリの利用により生じた不利益や損害について、開発者は一切の責任を負いかねます。利用者自身の判断と責任においてご利用ください。',
-        en: 'About App\nThis is an unofficial service developed and operated by an individual.\n\nData Accuracy\nThis app references external data (official university websites, etc.) and uses custom logic to display information. While we strive to ensure system accuracy, please note that information may differ from actual status due to delays in data updates or sudden changes in academic schedules.\n\nOfficial Verification\nFor important schedules or precise times, please ensure to check the official websites and bulletin boards of each facility/university.\n\nDisclaimer\nThe developer assumes no responsibility for any disadvantages or damages arising from the use of this app. Please use it at your own discretion and responsibility.'
+    // About Sections
+    'about.section.about.title': { ja: '本アプリについて', en: 'About App' },
+    'about.section.about.content': { ja: '本アプリは、個人が開発・運営を行っている非公式のサービスです。', en: 'This is an unofficial service developed and operated by an individual.' },
+
+    'about.section.accuracy.title': { ja: '情報の正確性について', en: 'Data Accuracy' },
+    'about.section.accuracy.content': {
+        ja: '本アプリは、大学公式サイト等の外部データを参照し、独自のロジックを用いて情報を表示しています。システムの運用には万全を期しておりますが、元データの更新遅延や学事予定の急な変更により、実際の状況と異なる情報が表示される可能性があります。あらかじめご了承ください。',
+        en: 'This app references external data (official university websites, etc.) and uses custom logic to display information. While we strive to ensure system accuracy, please note that information may differ from actual status due to delays in data updates or sudden changes in academic schedules.'
+    },
+
+    'about.section.official.title': { ja: '公式サイトの確認', en: 'Official Verification' },
+    'about.section.official.content': {
+        ja: '重要な予定や正確な時間を確認する必要がある場合は、必ず各施設・大学の公式サイトおよび掲示板を併せてご確認ください。',
+        en: 'For important schedules or precise times, please ensure to check the official websites and bulletin boards of each facility/university.'
+    },
+
+    'about.section.disclaimer.title': { ja: '免責事項', en: 'Disclaimer' },
+    'about.section.disclaimer.content': {
+        ja: '本アプリの利用により生じた不利益や損害について、開発者は一切の責任を負いかねます。利用者自身の判断と責任においてご利用ください。',
+        en: 'The developer assumes no responsibility for any disadvantages or damages arising from the use of this app. Please use it at your own discretion and responsibility.'
     },
     'about.last_updated': { ja: 'データ最終更新日', en: 'Data Last Updated' },
     'about.stale_warning': { ja: '※古い情報が含まれている可能性があります', en: '※Data may be outdated' },

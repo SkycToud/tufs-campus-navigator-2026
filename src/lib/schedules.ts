@@ -240,7 +240,7 @@ export const CONST_SCHEDULE_DATA: Record<FacilityId, FacilityData> = {
         ]
     },
     sabor_2f: {
-        name: '2階食堂さぼおる',
+        name: '2階食堂\nさぼおる',
         nameEn: 'Cafeteria Sabor (2F)',
         category: 'facility',
         unpublishedFrom: '2026-04-01',
@@ -264,7 +264,7 @@ export const CONST_SCHEDULE_DATA: Record<FacilityId, FacilityData> = {
         ].map(r => r.type === 'weekday' ? { ...r, isClosed: true } : r)
     },
     store: {
-        name: '購買書籍部ハッチポッチ',
+        name: '購買書籍部\nハッチポッチ',
         nameEn: 'Co-op Store Hatchpotch',
         category: 'facility',
         unpublishedFrom: '2026-04-01',

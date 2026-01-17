@@ -112,7 +112,14 @@ export const FacilityCard: React.FC<FacilityCardProps> = ({ facilityId, date, co
                         <Icon size={24} className={styles.text} />
                     </div>
                     <div className="min-w-0 flex-1">
-                        <h3 className="font-bold text-calm-text text-sm md:text-base leading-tight whitespace-normal break-words">{displayName}</h3>
+                        <h3 className="font-bold text-calm-text text-sm md:text-base leading-tight whitespace-normal break-words">
+                            {displayName.split('\n').map((line, i, arr) => (
+                                <span key={i}>
+                                    {line}
+                                    {i < arr.length - 1 && <br className="hidden lg:block" />}
+                                </span>
+                            ))}
+                        </h3>
 
                     </div>
                 </div>
