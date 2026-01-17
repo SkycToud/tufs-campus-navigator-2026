@@ -61,7 +61,6 @@ export const Dashboard: React.FC = () => {
                         <FacilityCard facilityId="store" date={date} onClick={() => setSelectedFacility('store')} />
                         <FacilityCard facilityId="sabor_2f" date={date} onClick={() => setSelectedFacility('sabor_2f')} />
                     </div>
-                    <FacilityCard facilityId="cafe_castalia" date={date} onClick={() => setSelectedFacility('cafe_castalia')} />
                 </section>
 
                 <section className="space-y-4">

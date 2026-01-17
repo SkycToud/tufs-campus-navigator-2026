@@ -65,19 +65,19 @@ export const AdminBuildingCard: React.FC<AdminBuildingCardProps> = ({ date, onSe
     return (
         <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
             {/* Main Building Header */}
-            <button
-                onClick={() => onSelectFacility(mainId)}
-                className="w-full p-4 bg-slate-50/30 text-left hover:bg-slate-50 transition-colors group"
+            {/* Main Building Header */}
+            <div
+                className="w-full p-4 bg-slate-50/30 text-left"
             >
                 <div className="flex justify-between items-center mb-1">
-                    <h3 className="font-bold text-calm-text text-base group-hover:text-accent transition-colors">
+                    <h3 className="font-bold text-calm-text text-base">
                         {mainName}
                     </h3>
                     <span className="text-calm-subtext">
                         {/* Status hidden as requested */}
                     </span>
                 </div>
-            </button>
+            </div>
 
             {/* Sub Departments List */}
             <div className="flex flex-col">

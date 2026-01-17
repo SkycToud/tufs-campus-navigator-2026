@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { DATA_LAST_UPDATED } from '../lib/schedules';
-import { X, ExternalLink, Info } from 'lucide-react';
+import { X, ExternalLink, Info, AlertTriangle, ShieldAlert, Globe } from 'lucide-react';
 
 interface AboutModalProps {
     isOpen: boolean;
@@ -30,6 +30,29 @@ export const AboutModal: React.FC<AboutModalProps> = ({ isOpen, onClose }) => {
 
     if (!isOpen) return null;
 
+    const SECTIONS = [
+        {
+            icon: Info,
+            titleKey: 'about.section.about.title',
+            contentKey: 'about.section.about.content'
+        },
+        {
+            icon: AlertTriangle,
+            titleKey: 'about.section.accuracy.title',
+            contentKey: 'about.section.accuracy.content'
+        },
+        {
+            icon: Globe,
+            titleKey: 'about.section.official.title',
+            contentKey: 'about.section.official.content'
+        },
+        {
+            icon: ShieldAlert,
+            titleKey: 'about.section.disclaimer.title',
+            contentKey: 'about.section.disclaimer.content'
+        }
+    ];
+
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
             <div
@@ -55,20 +78,29 @@ export const AboutModal: React.FC<AboutModalProps> = ({ isOpen, onClose }) => {
                 </div>
 
                 {/* Content */}
-                <div className="p-6 overflow-y-auto space-y-6">
-                    {/* Disclaimer */}
-                    <div className="p-4 bg-amber-50 border border-amber-100 rounded-xl space-y-2">
-                        <h3 className="text-sm font-bold text-amber-800 flex items-center gap-2">
-                            {t('about.disclaimer_title')}
-                        </h3>
-                        <p className="text-sm text-amber-700 leading-relaxed whitespace-pre-wrap">
-                            {t('about.disclaimer_text')}
-                        </p>
+                <div className="p-6 overflow-y-auto space-y-8">
+                    {/* Sections */}
+                    <div className="space-y-6">
+                        {SECTIONS.map((section, i) => (
+                            <div key={i} className="flex gap-4">
+                                <div className="mt-0.5 shrink-0">
+                                    <section.icon className="w-5 h-5 text-calm-subtext" />
+                                </div>
+                                <div className="space-y-1">
+                                    <h3 className="text-xs font-bold text-calm-subtext uppercase tracking-wider">
+                                        {t(section.titleKey)}
+                                    </h3>
+                                    <p className="text-sm text-calm-text leading-relaxed">
+                                        {t(section.contentKey)}
+                                    </p>
+                                </div>
+                            </div>
+                        ))}
                     </div>
 
                     {/* Links */}
-                    <div className="space-y-3">
-                        <h3 className="text-sm font-bold text-calm-subtext uppercase tracking-wider">
+                    <div className="space-y-3 pt-2 border-t border-slate-100">
+                        <h3 className="text-xs font-bold text-calm-subtext uppercase tracking-wider mt-4">
                             {t('about.official_links')}
                         </h3>
                         <div className="grid gap-2">
@@ -111,7 +143,7 @@ export const AboutModal: React.FC<AboutModalProps> = ({ isOpen, onClose }) => {
                         </div>
                     </div>
 
-                    <div className="pt-4 text-center space-y-2">
+                    <div className="pt-4 text-center space-y-2 border-t border-slate-100">
                         <div className="text-xs text-slate-500">
                             {t('about.last_updated')}: {new Date(DATA_LAST_UPDATED).toLocaleDateString(language === 'ja' ? 'ja-JP' : 'en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
                         </div>
