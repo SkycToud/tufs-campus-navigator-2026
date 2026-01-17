@@ -6,24 +6,36 @@ import { useMonthlySchedule } from '../hooks/useMonthlySchedule';
 import { CONST_SCHEDULE_DATA, type FacilityId } from '../lib/schedules';
 import { cn } from '../lib/utils';
 import { getFacilityDailyInfo } from '../lib/status-utils';
-import { getNowJST } from '../lib/date';
 import { useLanguage } from '../contexts/LanguageContext';
 
 interface FacilityCalendarModalProps {
-    facilityId: FacilityId | null;
+    facilityId: FacilityId;
     isOpen: boolean;
     onClose: () => void;
+    initialDate?: Date;
 }
 
-export function FacilityCalendarModal({ facilityId, isOpen, onClose }: FacilityCalendarModalProps) {
+export const FacilityCalendarModal: React.FC<FacilityCalendarModalProps> = ({ facilityId, isOpen, onClose, initialDate }) => {
     const { t, language } = useLanguage();
-    const [currentDate, setCurrentDate] = useState(getNowJST());
+    // Initialize with initialDate if present, otherwise Jan 2026
+    const [currentDate, setCurrentDate] = useState(() => initialDate || new Date(2026, 0, 1));
+
+    // Update currentDate when modal opens or initialDate changes
+    useEffect(() => {
+        if (isOpen && initialDate) {
+            setCurrentDate(initialDate);
+        } else if (isOpen && !initialDate) {
+            // Reset to Jan 1 if no specific date? Or keep state?
+            // Usually keeping state is better, but requirement implies "Jump to Date".
+            // Let's rely on the fact that if initialDate IS passed, we jump. 
+            // If opened normally (without initialDate), we might want default or last state.
+            // For now, let's just respect initialDate if provided on open.
+        }
+    }, [isOpen, initialDate]);
 
     useEffect(() => {
         if (isOpen) {
             document.body.style.overflow = 'hidden';
-            // Reset to current month when opening
-            setCurrentDate(getNowJST());
         } else {
             document.body.style.overflow = '';
         }
