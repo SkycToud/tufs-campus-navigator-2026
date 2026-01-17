@@ -4,7 +4,7 @@ import { ja, enUS } from 'date-fns/locale';
 import type { SearchResult } from '../hooks/useEventSearch';
 import { useLanguage } from '../contexts/LanguageContext';
 import { type FacilityId } from '../lib/schedules';
-import { Calendar, MapPin, AlertCircle } from 'lucide-react';
+import { Calendar, MapPin } from 'lucide-react';
 
 interface SearchResultsProps {
     results: SearchResult[];
@@ -12,7 +12,7 @@ interface SearchResultsProps {
 }
 
 export const SearchResults: React.FC<SearchResultsProps> = ({ results, onSelectFacility }) => {
-    const { language, t } = useLanguage();
+    const { language } = useLanguage();
     const locale = language === 'ja' ? ja : enUS;
 
     if (results.length === 0) return null;
