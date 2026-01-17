@@ -346,7 +346,7 @@ export function getFacilityDailyInfo(
 
     // Custom logic for Lecture Building
     if (facilityId === 'lecture_bldg') {
-        if (hoursText === '07:00-20:00') color = 'green';
+        if (hoursText === '08:00-20:00') color = 'green';
         else color = 'gray';
     }
 
