@@ -6,7 +6,6 @@ import { useMonthlySchedule } from '../hooks/useMonthlySchedule';
 import { CONST_SCHEDULE_DATA, type FacilityId } from '../lib/schedules';
 import { cn } from '../lib/utils';
 import { getFacilityDailyInfo } from '../lib/status-utils';
-import { getNowJST } from '../lib/date';
 import { useLanguage } from '../contexts/LanguageContext';
 
 interface FacilityCalendarModalProps {

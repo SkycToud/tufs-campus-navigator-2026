@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useSearchContext } from '../contexts/SearchContext';
 import { CONST_SCHEDULE_DATA, type FacilityId } from '../lib/schedules';
-import { parseISO, eachDayOfInterval, format, isSameDay } from 'date-fns';
+import { parseISO, eachDayOfInterval } from 'date-fns';
 import * as holiday_jp from 'holiday-jp';
 import { useLanguage } from '../contexts/LanguageContext';
 
