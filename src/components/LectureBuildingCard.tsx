@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { type FacilityId, CONST_SCHEDULE_DATA } from '../lib/schedules';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useFacilityStatus } from '../hooks/useFacilityStatus';
@@ -53,25 +53,24 @@ const SubDepartment: React.FC<SubDepartmentProps> = ({ id, date, onClick }) => {
     );
 };
 
-interface AdminBuildingCardProps {
+interface LectureBuildingCardProps {
     date: Date;
     onSelectFacility: (id: FacilityId) => void;
 }
 
-export const AdminBuildingCard: React.FC<AdminBuildingCardProps> = ({ date, onSelectFacility }) => {
+export const LectureBuildingCard: React.FC<LectureBuildingCardProps> = ({ date, onSelectFacility }) => {
     const { language } = useLanguage();
     const { query, filteredFacilityIds } = useSearch();
-    const [isExpanded, setIsExpanded] = useState(false);
+    const [isExpanded, setIsExpanded] = React.useState(false);
 
-    const mainId: FacilityId = 'admin_bldg';
+    const mainId: FacilityId = 'lecture_bldg';
     const mainFacility = CONST_SCHEDULE_DATA[mainId];
-    const mainName = language === 'ja' ? mainFacility.name : mainFacility.nameEn;
 
     // Sub-facility IDs to check for auto-expansion
-    const subFacilityIds: FacilityId[] = ['academic_affairs', 'admission', 'accounting', 'cert_machine'];
+    const subFacilityIds: FacilityId[] = ['global_career_center', 'tufs_support'];
 
     // Auto-expand if search matches sub-facilities
-    useEffect(() => {
+    React.useEffect(() => {
         if (query && filteredFacilityIds) {
             const hasMatch = subFacilityIds.some(id => filteredFacilityIds.includes(id));
             if (hasMatch) {
@@ -80,19 +79,31 @@ export const AdminBuildingCard: React.FC<AdminBuildingCardProps> = ({ date, onSe
         }
     }, [query, filteredFacilityIds]);
 
-    // Status logic for main building (optional, currently just showing name)
-    // Maybe show status now? User requested "toggle display" but didn't specify main status.
-    // AdminBuildingCard previously hid status. Let's keep it minimal but clickable.
+    const { status, statusText } = useFacilityStatus(mainId, date);
+    const style = STATUS_Styles[status] || STATUS_Styles.closed;
+    const mainName = language === 'ja' ? mainFacility.name : mainFacility.nameEn;
 
     return (
         <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
-            {/* Main Building Header - Clickable and Toggleable */}
+            {/* Main Building Header - Clickable for Lecture Building */}
             <div className="w-full flex items-center justify-between p-4 bg-slate-50/30">
-                <div className="flex-grow flex justify-between items-center">
-                    <h3 className="font-bold text-calm-text text-base">
-                        {mainName}
-                    </h3>
-                </div>
+                <button
+                    onClick={() => onSelectFacility(mainId)}
+                    className="flex-grow text-left group flex justify-between items-center"
+                >
+                    <div className="flex flex-col">
+                        <div className="flex items-center gap-2">
+                            <h3 className="font-bold text-calm-text text-base group-hover:text-accent transition-colors">
+                                {mainName}
+                            </h3>
+                            {/* Status Badge */}
+                            <div className={`flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold border ${style.bg} ${style.text} ${style.border}`}>
+                                <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${style.dot}`} />
+                                <span>{statusText}</span>
+                            </div>
+                        </div>
+                    </div>
+                </button>
 
                 {/* Toggle Button */}
                 <button
@@ -103,13 +114,11 @@ export const AdminBuildingCard: React.FC<AdminBuildingCardProps> = ({ date, onSe
                 </button>
             </div>
 
-            {/* Sub Departments List */}
+            {/* Sub Departments List - Animated/Conditional */}
             {isExpanded && (
                 <div className="flex flex-col animate-in slide-in-from-top-2 duration-200">
-                    <SubDepartment id="academic_affairs" date={date} onClick={() => onSelectFacility('academic_affairs')} />
-                    <SubDepartment id="admission" date={date} onClick={() => onSelectFacility('admission')} />
-                    <SubDepartment id="accounting" date={date} onClick={() => onSelectFacility('accounting')} />
-                    <SubDepartment id="cert_machine" date={date} onClick={() => onSelectFacility('cert_machine')} />
+                    <SubDepartment id="global_career_center" date={date} onClick={() => onSelectFacility('global_career_center')} />
+                    <SubDepartment id="tufs_support" date={date} onClick={() => onSelectFacility('tufs_support')} />
                 </div>
             )}
         </div>

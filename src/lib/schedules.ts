@@ -9,6 +9,8 @@ export type FacilityId =
     | 'cert_machine'
     | 'circle_bldg'
     | 'lecture_bldg'
+    | 'global_career_center'
+    | 'tufs_support'
     | 'agora_global'
     | 'cafe_castalia'
     | 'admin_bldg'
@@ -409,6 +411,31 @@ export const CONST_SCHEDULE_DATA: Record<FacilityId, FacilityData> = {
             Rules.weekday(HO.EARLY_LATE),
             Rules.subWeekday('saturday', [], true),
             Rules.subWeekday('sunday', [], true),
+        ]
+    },
+    global_career_center: {
+        name: 'グローバル・キャリア・センター',
+        nameEn: 'Global Career Center',
+        category: 'facility',
+        unpublishedFrom: '2026-04-01',
+        rules: [
+            ...RESTRICTED_ENTRY_RULES, // Sync with Lecture Bldg restrictions
+            ...COMMON_ADMIN_RULES,
+            Rules.weekday([
+                { start: '09:00', end: '12:40' },
+                { start: '13:40', end: '16:30' }
+            ]),
+        ]
+    },
+    tufs_support: {
+        name: 'TUFS Academic Support Center（たふさぽ）',
+        nameEn: 'TUFS Academic Support Center',
+        category: 'facility',
+        unpublishedFrom: '2026-04-01',
+        rules: [
+            ...RESTRICTED_ENTRY_RULES, // Sync with Lecture Bldg restrictions
+            ...COMMON_ADMIN_RULES,
+            Rules.weekday(times('10:00', '15:00')),
         ]
     },
     agora_global: {

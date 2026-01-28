@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { DateSelector } from './DateSelector';
 import { FacilityCard } from './FacilityCard';
 import { AdminBuildingCard } from './AdminBuildingCard';
+import { LectureBuildingCard } from './LectureBuildingCard';
 import { type FacilityId } from '../lib/schedules';
 import { useLanguage } from '../contexts/LanguageContext';
 import { FacilityCalendarModal } from './FacilityCalendarModal';
@@ -47,13 +48,19 @@ export const Dashboard: React.FC = () => {
     // Define groups for section visibility check
     const mainFacilities: FacilityId[] = ['lecture_bldg', 'library', 'circle_bldg', 'agora_global'];
     const shopFacilities: FacilityId[] = ['cafeteria_1f', 'store', 'sabor_2f'];
-    const adminFacilities: FacilityId[] = ['admin_bldg', 'academic_affairs', 'admission', 'accounting']; // Check all for AdminCard visibility
+    const adminFacilities: FacilityId[] = ['admin_bldg', 'academic_affairs', 'admission', 'accounting', 'cert_machine']; // Added cert_machine
 
-    const showMainSection = isVisible('university_events') || mainFacilities.some(isVisible);
+    // Lecture Building related IDs for visibility check
+    const lectureBuildingIds: FacilityId[] = ['lecture_bldg', 'global_career_center', 'tufs_support'];
+    const showLectureBuilding = lectureBuildingIds.some(isVisible);
+
+    const showMainSection = isVisible('university_events') || mainFacilities.some(id => {
+        if (id === 'lecture_bldg') return showLectureBuilding;
+        return isVisible(id);
+    });
     const showShopSection = shopFacilities.some(isVisible);
-    // Admin card itself handles sub-depts, but for dashboard visibility we check if any related ID is matched.
-    // Also 'cert_machine' is in admin section.
-    const showAdminSection = adminFacilities.some(isVisible) || isVisible('cert_machine');
+    // Admin card handles sub-depts check via adminFacilities.
+    const showAdminSection = adminFacilities.some(isVisible);
 
     // Check if NO results
     const isNotFound = query && !showMainSection && !showShopSection && !showAdminSection;
@@ -89,20 +96,31 @@ export const Dashboard: React.FC = () => {
                                     onClick={() => setSelectedFacility('university_events')}
                                 />
                             )}
-                            {mainFacilities.some(isVisible) && (
+                            {(showLectureBuilding || mainFacilities.filter(id => id !== 'lecture_bldg').some(isVisible)) && (
                                 <h2 className="text-sm font-bold text-calm-subtext uppercase tracking-wider pl-2 mt-6">
                                     {t('section.main_facilities')}
                                 </h2>
                             )}
                             <div className="grid gap-3">
-                                {mainFacilities.map(id => isVisible(id) && (
-                                    <FacilityCard
-                                        key={id}
-                                        facilityId={id}
-                                        date={date}
-                                        onClick={() => setSelectedFacility(id)}
-                                    />
-                                ))}
+                                {mainFacilities.map(id => {
+                                    if (id === 'lecture_bldg') {
+                                        return showLectureBuilding ? (
+                                            <LectureBuildingCard
+                                                key={id}
+                                                date={date}
+                                                onSelectFacility={setSelectedFacility}
+                                            />
+                                        ) : null;
+                                    }
+                                    return isVisible(id) && (
+                                        <FacilityCard
+                                            key={id}
+                                            facilityId={id}
+                                            date={date}
+                                            onClick={() => setSelectedFacility(id)}
+                                        />
+                                    );
+                                })}
                             </div>
                         </section>
                     )}
@@ -129,12 +147,7 @@ export const Dashboard: React.FC = () => {
                     {showAdminSection && (
                         <section className="space-y-4 animate-in slide-in-from-bottom-4 duration-300">
                             <h2 className="text-sm font-bold text-calm-subtext uppercase tracking-wider pl-2">{t('section.administration')}</h2>
-                            {adminFacilities.some(isVisible) && (
-                                <AdminBuildingCard date={date} onSelectFacility={setSelectedFacility} />
-                            )}
-                            {isVisible('cert_machine') && (
-                                <FacilityCard facilityId="cert_machine" date={date} onClick={() => setSelectedFacility('cert_machine')} />
-                            )}
+                            <AdminBuildingCard date={date} onSelectFacility={setSelectedFacility} />
                         </section>
                     )}
                 </div>
