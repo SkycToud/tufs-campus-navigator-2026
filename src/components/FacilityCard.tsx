@@ -1,7 +1,7 @@
 import { useFacilityStatus, type FacilityStatus } from '../hooks/useFacilityStatus';
 import { cn } from '../lib/utils';
 import { type FacilityId } from '../lib/schedules';
-import { Book, Coffee, Utensils, ShoppingBasket, GraduationCap, Building2, CreditCard, Printer, Users, School, Globe, Croissant, Calendar } from 'lucide-react';
+import { Book, Coffee, Utensils, ShoppingBasket, GraduationCap, Building2, CreditCard, Printer, Users, School, Globe, Croissant, Calendar, Briefcase, HelpingHand } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { CONST_SCHEDULE_DATA } from '../lib/schedules';
 
@@ -16,6 +16,8 @@ const ICON_MAP: Record<FacilityId, React.ElementType> = {
     cert_machine: Printer,
     circle_bldg: Users,
     lecture_bldg: School,
+    global_career_center: Briefcase,
+    tufs_support: HelpingHand,
     agora_global: Globe,
     cafe_castalia: Croissant,
     admin_bldg: Building2,
