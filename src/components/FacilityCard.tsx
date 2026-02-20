@@ -103,7 +103,7 @@ export const FacilityCard: React.FC<FacilityCardProps> = ({ facilityId, date, co
         <div
             onClick={onClick}
             className={cn(
-                "glass p-4 rounded-2xl flex flex-col gap-3 border shadow-sm transition-all hover:shadow-md",
+                "glass p-4 rounded-2xl flex flex-col gap-2 border shadow-sm transition-all hover:shadow-md",
                 styles.border,
                 onClick && "cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
             )}

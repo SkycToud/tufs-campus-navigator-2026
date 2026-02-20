@@ -17,19 +17,17 @@ interface FacilityCalendarModalProps {
 
 export const FacilityCalendarModal: React.FC<FacilityCalendarModalProps> = ({ facilityId, isOpen, onClose, initialDate }) => {
     const { t, language } = useLanguage();
-    // Initialize with initialDate if present, otherwise Jan 2026
-    const [currentDate, setCurrentDate] = useState(() => initialDate || new Date(2026, 0, 1));
+    // Initialize with initialDate if present, otherwise today
+    const [currentDate, setCurrentDate] = useState(() => initialDate || new Date());
 
     // Update currentDate when modal opens or initialDate changes
     useEffect(() => {
-        if (isOpen && initialDate) {
-            setCurrentDate(initialDate);
-        } else if (isOpen && !initialDate) {
-            // Reset to Jan 1 if no specific date? Or keep state?
-            // Usually keeping state is better, but requirement implies "Jump to Date".
-            // Let's rely on the fact that if initialDate IS passed, we jump. 
-            // If opened normally (without initialDate), we might want default or last state.
-            // For now, let's just respect initialDate if provided on open.
+        if (isOpen) {
+            if (initialDate) {
+                setCurrentDate(initialDate);
+            } else {
+                setCurrentDate(new Date());
+            }
         }
     }, [isOpen, initialDate]);
 
