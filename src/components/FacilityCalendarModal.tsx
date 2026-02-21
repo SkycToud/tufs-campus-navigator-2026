@@ -4,6 +4,7 @@ import { ja, enUS } from 'date-fns/locale';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useMonthlySchedule } from '../hooks/useMonthlySchedule';
 import { CONST_SCHEDULE_DATA, type FacilityId } from '../lib/schedules';
+import { getNowJST } from '../lib/date';
 import { cn } from '../lib/utils';
 import { getFacilityDailyInfo } from '../lib/status-utils';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -17,17 +18,13 @@ interface FacilityCalendarModalProps {
 
 export const FacilityCalendarModal: React.FC<FacilityCalendarModalProps> = ({ facilityId, isOpen, onClose, initialDate }) => {
     const { t, language } = useLanguage();
-    // Initialize with initialDate if present, otherwise today
-    const [currentDate, setCurrentDate] = useState(() => initialDate || new Date());
+    // Initialize with initialDate if present, otherwise current JST time
+    const [currentDate, setCurrentDate] = useState(() => initialDate || getNowJST());
 
     // Update currentDate when modal opens or initialDate changes
     useEffect(() => {
         if (isOpen) {
-            if (initialDate) {
-                setCurrentDate(initialDate);
-            } else {
-                setCurrentDate(new Date());
-            }
+            setCurrentDate(initialDate || getNowJST());
         }
     }, [isOpen, initialDate]);
 
