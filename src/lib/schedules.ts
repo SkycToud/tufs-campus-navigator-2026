@@ -158,7 +158,7 @@ export const CONST_SCHEDULE_DATA: Record<FacilityId, FacilityData> = {
         name: '附属図書館',
         nameEn: 'TUFS Library',
         category: 'facility',
-        unpublishedFrom: '2026-03-01',
+        unpublishedFrom: '2026-04-01',
         rules: [
             // Exceptions: Jan 2026
             Rules.closedRange('2026-01-01', '2026-01-04', 'note.new_year_holiday'),
@@ -169,6 +169,13 @@ export const CONST_SCHEDULE_DATA: Record<FacilityId, FacilityData> = {
             Rules.date('2026-02-24', times('09:00', '17:00')),
             Rules.closedDate('2026-02-25', 'note.entrance_exam'),
             Rules.closedDate('2026-02-27', 'note.designated_closed'),
+
+            // Exceptions: Mar 2026
+            Rules.date('2026-03-11', times('09:00', '17:00')),
+            Rules.closedDate('2026-03-12'),
+            Rules.closedDate('2026-03-20', 'note.national_holiday'),
+            Rules.closedDate('2026-03-25', '月末休館日・臨時休館'),
+            Rules.date('2026-03-31', times('09:00', '17:00')),
 
             // Dynamic Holidays (Closed on national holidays)
             Rules.nationalHoliday(true),
@@ -183,13 +190,13 @@ export const CONST_SCHEDULE_DATA: Record<FacilityId, FacilityData> = {
         name: '1階食堂ミール',
         nameEn: 'Cafeteria Meal (1F)',
         category: 'facility',
-        unpublishedFrom: '2026-04-01',
+        unpublishedFrom: '2026-05-01',
         rules: [
             Rules.closedRange('2026-01-01', '2026-01-04', '年始休業'),
             Rules.range('2026-01-05', '2026-01-06', HO.LUNCH_STD),
             Rules.date('2026-01-07', HO.LUNCH_SHORT, '短縮営業'),
             Rules.range('2026-01-08', '2026-01-09', HO.LUNCH_STD),
-            Rules.closedRange('2026-01-10', '2026-01-12', 'note.includes_holiday'),
+            Rules.closedRange('2026-01-10', '2026-01-12', '祝日含む'),
             Rules.date('2026-01-13', HO.LUNCH_STD),
             Rules.date('2026-01-14', HO.LUNCH_SHORT, 'note.short_hours'),
             Rules.date('2026-01-15', HO.LUNCH_STD),
@@ -234,9 +241,17 @@ export const CONST_SCHEDULE_DATA: Record<FacilityId, FacilityData> = {
             Rules.closedRange('2026-03-28', '2026-03-29', '定休日'),
             Rules.range('2026-03-30', '2026-03-31', [], '営業時間未定'),
 
-            // Fallbacks
-            Rules.weekday(times('11:30', '14:30')),
-            Rules.subWeekday('wednesday', times('11:30', '13:30')),
+            // April 2026
+            Rules.range('2026-04-01', '2026-04-03', HO.LUNCH_SHORT, '短縮営業'),
+            Rules.date('2026-04-04', times('11:00', '13:00'), '短縮営業'),
+            Rules.closedDate('2026-04-05', '定休日'),
+            Rules.range('2026-04-06', '2026-04-07', HO.LUNCH_SHORT, '短縮営業'),
+            Rules.date('2026-04-29', HO.LUNCH_SHORT, '短縮営業'), // Showa Day
+            Rules.closedDate('2026-04-30', '休業'),
+
+            // Fallbacks (New Standard from April 2026)
+            Rules.weekday(HO.LUNCH_STD),
+            Rules.subWeekday('wednesday', HO.LUNCH_SHORT),
             Rules.subWeekday('saturday', [], true),
             Rules.subWeekday('sunday', [], true),
         ]
@@ -245,7 +260,7 @@ export const CONST_SCHEDULE_DATA: Record<FacilityId, FacilityData> = {
         name: '2階食堂\nさぼおる',
         nameEn: 'Cafeteria Sabor (2F)',
         category: 'facility',
-        unpublishedFrom: '2026-04-01',
+        unpublishedFrom: '2026-05-01',
         rules: [
             Rules.closedRange('2026-01-01', '2026-01-04', '年始休業'),
             Rules.range('2026-01-05', '2026-01-09', HO.LUNCH_STD, 'note.sabor_special'),
@@ -259,17 +274,22 @@ export const CONST_SCHEDULE_DATA: Record<FacilityId, FacilityData> = {
             // March 2026
             Rules.closedRange('2026-03-01', '2026-03-31', '3月全日休業'),
 
+            // April 2026
+            Rules.closedRange('2026-04-01', '2026-04-07', '休業'),
+            Rules.date('2026-04-29', times('11:00', '14:30'), '食事13:00まで'), // Showa Day (Open)
+            Rules.closedDate('2026-04-30', '休業'),
+
             // Fallbacks
-            Rules.weekday([], 'closed'), // Mark as closed basically
+            Rules.weekday(times('11:00', '14:30'), '食事13:00まで'),
             Rules.subWeekday('saturday', [], true),
             Rules.subWeekday('sunday', [], true),
-        ].map(r => r.type === 'weekday' ? { ...r, isClosed: true } : r)
+        ]
     },
     store: {
         name: '購買書籍部\nハッチポッチ',
         nameEn: 'Co-op Store Hatchpotch',
         category: 'facility',
-        unpublishedFrom: '2026-04-01',
+        unpublishedFrom: '2026-05-01',
         rules: [
             Rules.closedRange('2026-01-01', '2026-01-04', '年始休業'),
             Rules.range('2026-01-05', '2026-01-06', HO.STORE_STD),
@@ -319,9 +339,16 @@ export const CONST_SCHEDULE_DATA: Record<FacilityId, FacilityData> = {
             Rules.closedRange('2026-03-28', '2026-03-29', '定休日'),
             Rules.range('2026-03-30', '2026-03-31', [], '営業時間未定'),
 
-            // Fallbacks
-            Rules.weekday(HO.STORE_STD),
-            Rules.subWeekday('wednesday', HO.STORE_SHORT),
+            // April 2026
+            Rules.range('2026-04-01', '2026-04-03', times('11:00', '14:00'), '短縮営業'),
+            Rules.date('2026-04-04', HO.STORE_SHORT, '短縮営業'), // Sat Open
+            Rules.closedDate('2026-04-05', '定休日'),
+            Rules.range('2026-04-06', '2026-04-07', times('11:00', '14:00'), '短縮営業'),
+            Rules.closedDate('2026-04-30', '休業'),
+
+            // Fallbacks (New Standard from April 2026)
+            Rules.weekday(times('10:00', '16:30')),
+            { ...Rules.subWeekday('wednesday', times('10:00', '15:00')), note: '短縮営業' },
             Rules.subWeekday('saturday', [], true),
             Rules.subWeekday('sunday', [], true),
         ]
