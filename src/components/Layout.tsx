@@ -1,5 +1,5 @@
 import { useDebounce } from '../hooks/useDebounce';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Languages, Info, Menu, X, MessageSquare, Search } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { AboutModal } from './AboutModal';
@@ -24,6 +24,8 @@ const LayoutContent = ({ children }: { children: React.ReactNode }) => {
     const [isAboutOpen, setIsAboutOpen] = useState(false);
     const [isSearchExpanded, setIsSearchExpanded] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const searchRef = useRef<HTMLDivElement>(null);
+    const menuRef = useRef<HTMLDivElement>(null);
 
     // Local state for immediate input feedback (buffer)
     const [inputValue, setInputValue] = useState(query);
@@ -56,6 +58,40 @@ const LayoutContent = ({ children }: { children: React.ReactNode }) => {
             setInputValue('');
         }
     }, [query]);
+
+    // 3. Dismiss search/menu on outside click or Escape
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            // Check search dismissal
+            if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+                if (isSearchExpanded || inputValue) {
+                    setIsSearchExpanded(false);
+                    setInputValue('');
+                    setQuery('');
+                }
+            }
+            // Check menu dismissal
+            if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+                setIsMenuOpen(false);
+            }
+        };
+
+        const handleEscape = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') {
+                setIsSearchExpanded(false);
+                setInputValue('');
+                setQuery('');
+                setIsMenuOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        document.addEventListener('keydown', handleEscape);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+            document.removeEventListener('keydown', handleEscape);
+        };
+    }, [isSearchExpanded, inputValue, setQuery]);
 
 
     // Hidden trigger: Triple click on logo
@@ -110,7 +146,7 @@ const LayoutContent = ({ children }: { children: React.ReactNode }) => {
                         <Search size={22} />
                     </button>
                 ) : (
-                    <div className="flex-1 max-w-sm relative animate-in fade-in zoom-in-95 duration-200">
+                    <div ref={searchRef} className="flex-1 max-w-sm relative animate-in fade-in zoom-in-95 duration-200">
                         <div className="absolute left-3 top-1/2 -translate-y-1/2 text-calm-subtext pointer-events-none">
                             <Search size={18} />
                         </div>
@@ -140,7 +176,7 @@ const LayoutContent = ({ children }: { children: React.ReactNode }) => {
                 )}
 
 
-                <div className="relative shrink-0">
+                <div ref={menuRef} className="relative shrink-0">
                     <button
                         onClick={() => setIsMenuOpen(!isMenuOpen)}
                         className="p-2 rounded-full hover:bg-white/40 active:bg-white/60 transition-colors text-calm-subtext hover:text-accent"

@@ -503,4 +503,4 @@ export const SCHEDULES: Record<FacilityId, ScheduleRule[]> = Object.fromEntries(
     Object.entries(CONST_SCHEDULE_DATA).map(([id, data]) => [id, data.rules])
 ) as Record<FacilityId, ScheduleRule[]>;
 
-export const DATA_LAST_UPDATED = '2026-01-15'; // YYYY-MM-DD
+export const DATA_LAST_UPDATED = '2026-02-19'; // YYYY-MM-DD

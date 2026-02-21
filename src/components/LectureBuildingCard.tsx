@@ -3,7 +3,8 @@ import { type FacilityId, CONST_SCHEDULE_DATA } from '../lib/schedules';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useFacilityStatus } from '../hooks/useFacilityStatus';
 import { useSearch } from '../hooks/useSearch';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { ChevronDown, ChevronUp, School } from 'lucide-react';
+import { cn } from '../lib/utils';
 
 interface SubDepartmentProps {
     id: FacilityId;
@@ -69,6 +70,9 @@ export const LectureBuildingCard: React.FC<LectureBuildingCardProps> = ({ date, 
     // Sub-facility IDs to check for auto-expansion
     const subFacilityIds: FacilityId[] = ['global_career_center', 'tufs_support'];
 
+    const { status, statusText } = useFacilityStatus(mainId, date);
+    const style = STATUS_Styles[status] || STATUS_Styles.closed;
+
     // Auto-expand if search matches sub-facilities
     React.useEffect(() => {
         if (query && filteredFacilityIds) {
@@ -79,8 +83,6 @@ export const LectureBuildingCard: React.FC<LectureBuildingCardProps> = ({ date, 
         }
     }, [query, filteredFacilityIds]);
 
-    const { status, statusText } = useFacilityStatus(mainId, date);
-    const style = STATUS_Styles[status] || STATUS_Styles.closed;
     const mainName = language === 'ja' ? mainFacility.name : mainFacility.nameEn;
 
     return (
@@ -89,16 +91,19 @@ export const LectureBuildingCard: React.FC<LectureBuildingCardProps> = ({ date, 
             <div className="w-full flex items-center justify-between p-4 bg-slate-50/30">
                 <button
                     onClick={() => onSelectFacility(mainId)}
-                    className="flex-grow text-left group flex justify-between items-center"
+                    className="flex-grow text-left group flex items-center gap-3"
                 >
-                    <div className="flex flex-col">
-                        <div className="flex items-center gap-2">
-                            <h3 className="font-bold text-calm-text text-base group-hover:text-accent transition-colors">
+                    <div className={cn("p-2 rounded-xl shrink-0 transition-colors", style.bg)}>
+                        <School size={24} className={style.text} />
+                    </div>
+                    <div className="flex flex-col min-w-0 flex-1">
+                        <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+                            <h3 className="font-bold text-calm-text text-base group-hover:text-accent transition-colors leading-tight">
                                 {mainName}
                             </h3>
                             {/* Status Badge */}
-                            <div className={`flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold border ${style.bg} ${style.text} ${style.border}`}>
-                                <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${style.dot}`} />
+                            <div className={cn("flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold border shrink-0", style.bg, style.text, style.border)}>
+                                <span className={cn("w-1.5 h-1.5 rounded-full shrink-0", status === 'open' && "animate-pulse", style.dot)} />
                                 <span>{statusText}</span>
                             </div>
                         </div>

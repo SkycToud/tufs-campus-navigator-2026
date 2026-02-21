@@ -3,7 +3,8 @@ import { type FacilityId, CONST_SCHEDULE_DATA } from '../lib/schedules';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useFacilityStatus } from '../hooks/useFacilityStatus';
 import { useSearch } from '../hooks/useSearch';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { ChevronDown, ChevronUp, Building2 } from 'lucide-react';
+import { cn } from '../lib/utils';
 
 interface SubDepartmentProps {
     id: FacilityId;
@@ -70,6 +71,9 @@ export const AdminBuildingCard: React.FC<AdminBuildingCardProps> = ({ date, onSe
     // Sub-facility IDs to check for auto-expansion
     const subFacilityIds: FacilityId[] = ['academic_affairs', 'admission', 'accounting', 'cert_machine'];
 
+    const { status, statusText } = useFacilityStatus(mainId, date);
+    const style = STATUS_Styles[status] || STATUS_Styles.closed;
+
     // Auto-expand if search matches sub-facilities
     useEffect(() => {
         if (query && filteredFacilityIds) {
@@ -88,11 +92,26 @@ export const AdminBuildingCard: React.FC<AdminBuildingCardProps> = ({ date, onSe
         <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
             {/* Main Building Header - Clickable and Toggleable */}
             <div className="w-full flex items-center justify-between p-4 bg-slate-50/30">
-                <div className="flex-grow flex justify-between items-center">
-                    <h3 className="font-bold text-calm-text text-base">
-                        {mainName}
-                    </h3>
-                </div>
+                <button
+                    onClick={() => onSelectFacility(mainId)}
+                    className="flex-grow text-left group flex items-center gap-3"
+                >
+                    <div className={cn("p-2 rounded-xl shrink-0 transition-colors", style.bg)}>
+                        <Building2 size={24} className={style.text} />
+                    </div>
+                    <div className="flex-grow flex justify-between items-center">
+                        <div className="flex items-center gap-2">
+                            <h3 className="font-bold text-calm-text text-base group-hover:text-accent transition-colors">
+                                {mainName}
+                            </h3>
+                            {/* Status Badge */}
+                            <div className={cn("flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold border shrink-0", style.bg, style.text, style.border)}>
+                                <span className={cn("w-1.5 h-1.5 rounded-full shrink-0", status === 'open' && "animate-pulse", style.dot)} />
+                                <span>{statusText}</span>
+                            </div>
+                        </div>
+                    </div>
+                </button>
 
                 {/* Toggle Button */}
                 <button
