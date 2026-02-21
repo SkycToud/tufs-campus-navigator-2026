@@ -4,6 +4,7 @@ import { ja, enUS } from 'date-fns/locale';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useMonthlySchedule } from '../hooks/useMonthlySchedule';
 import { CONST_SCHEDULE_DATA, type FacilityId } from '../lib/schedules';
+import { getNowJST } from '../lib/date';
 import { cn } from '../lib/utils';
 import { getFacilityDailyInfo } from '../lib/status-utils';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -17,19 +18,13 @@ interface FacilityCalendarModalProps {
 
 export const FacilityCalendarModal: React.FC<FacilityCalendarModalProps> = ({ facilityId, isOpen, onClose, initialDate }) => {
     const { t, language } = useLanguage();
-    // Initialize with initialDate if present, otherwise Jan 2026
-    const [currentDate, setCurrentDate] = useState(() => initialDate || new Date(2026, 0, 1));
+    // Initialize with initialDate if present, otherwise current JST time
+    const [currentDate, setCurrentDate] = useState(() => initialDate || getNowJST());
 
     // Update currentDate when modal opens or initialDate changes
     useEffect(() => {
-        if (isOpen && initialDate) {
-            setCurrentDate(initialDate);
-        } else if (isOpen && !initialDate) {
-            // Reset to Jan 1 if no specific date? Or keep state?
-            // Usually keeping state is better, but requirement implies "Jump to Date".
-            // Let's rely on the fact that if initialDate IS passed, we jump. 
-            // If opened normally (without initialDate), we might want default or last state.
-            // For now, let's just respect initialDate if provided on open.
+        if (isOpen) {
+            setCurrentDate(initialDate || getNowJST());
         }
     }, [isOpen, initialDate]);
 
