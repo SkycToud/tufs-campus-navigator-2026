@@ -158,7 +158,7 @@ export const CONST_SCHEDULE_DATA: Record<FacilityId, FacilityData> = {
         name: '附属図書館',
         nameEn: 'TUFS Library',
         category: 'facility',
-        unpublishedFrom: '2026-04-01',
+        unpublishedFrom: '2026-05-01',
         rules: [
             // Exceptions: Jan 2026
             Rules.closedRange('2026-01-01', '2026-01-04', 'note.new_year_holiday'),
@@ -176,6 +176,9 @@ export const CONST_SCHEDULE_DATA: Record<FacilityId, FacilityData> = {
             Rules.closedDate('2026-03-20', 'note.national_holiday'),
             Rules.closedDate('2026-03-25', '月末休館日・臨時休館'),
             Rules.date('2026-03-31', times('09:00', '17:00')),
+
+            // Exceptions: Apr 2026
+            Rules.date('2026-04-30', times('09:00', '17:00')),
 
             // Dynamic Holidays (Closed on national holidays)
             Rules.nationalHoliday(true),
@@ -530,4 +533,4 @@ export const SCHEDULES: Record<FacilityId, ScheduleRule[]> = Object.fromEntries(
     Object.entries(CONST_SCHEDULE_DATA).map(([id, data]) => [id, data.rules])
 ) as Record<FacilityId, ScheduleRule[]>;
 
-export const DATA_LAST_UPDATED = '2026-02-19'; // YYYY-MM-DD
+export const DATA_LAST_UPDATED = '2026-03-01'; // YYYY-MM-DD
