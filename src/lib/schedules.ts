@@ -371,7 +371,7 @@ export const CONST_SCHEDULE_DATA: Record<FacilityId, FacilityData> = {
 
             // Fallbacks (New Standard from April 2026)
             Rules.weekday(times('10:00', '16:30')),
-            { ...Rules.subWeekday('wednesday', times('10:00', '15:00')), note: '短縮営業' },
+            Rules.subWeekday('wednesday', times('10:00', '15:00')),
             Rules.subWeekday('saturday', [], true),
             Rules.subWeekday('sunday', [], true),
         ]

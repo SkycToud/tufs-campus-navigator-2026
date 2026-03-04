@@ -95,6 +95,7 @@ export function calculateFacilityStatus(
     if (!matchedRule) {
         if (dayOfWeek === 0) matchedRule = rules.find(r => r.type === 'sunday');
         else if (dayOfWeek === 6) matchedRule = rules.find(r => r.type === 'saturday');
+        else if (dayOfWeek === 3) matchedRule = rules.find(r => r.type === 'wednesday') || rules.find(r => r.type === 'weekday');
         else matchedRule = rules.find(r => r.type === 'weekday');
     }
 
@@ -284,6 +285,10 @@ export function getFacilityDailyInfo(
     if (!matchedRule) {
         if (dayOfWeek === 0) { matchedRule = rules.find(r => r.type === 'sunday'); ruleType = 'sunday'; }
         else if (dayOfWeek === 6) { matchedRule = rules.find(r => r.type === 'saturday'); ruleType = 'saturday'; }
+        else if (dayOfWeek === 3) {
+            matchedRule = rules.find(r => r.type === 'wednesday') || rules.find(r => r.type === 'weekday');
+            ruleType = (matchedRule?.type === 'wednesday') ? 'wednesday' : 'weekday';
+        }
         else { matchedRule = rules.find(r => r.type === 'weekday'); ruleType = 'weekday'; }
     }
 
