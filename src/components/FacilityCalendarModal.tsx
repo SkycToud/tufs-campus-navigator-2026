@@ -65,26 +65,32 @@ export const FacilityCalendarModal: React.FC<FacilityCalendarModalProps> = ({ fa
         ? ['日', '月', '火', '水', '木', '金', '土']
         : ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-    const getColorClasses = (color: string) => {
+    const formatHours = (hours: string) => {
+        return hours; // Return original HH:mm-HH:mm format
+    };
+
+    const getColorClasses = (color: string, isClosed?: boolean) => {
+        if (isClosed) return "bg-slate-50 border-slate-200 text-slate-400 opacity-60";
         switch (color) {
-            case 'green': return "bg-emerald-50/80 border-emerald-100/50 text-emerald-900";
-            case 'pink': return "bg-rose-50/80 border-rose-100/50 text-rose-900";
-            case 'gray': return "bg-slate-50/50 border-slate-100 text-slate-400";
-            case 'orange': return "bg-amber-50/80 border-amber-100/50 text-amber-900";
-            case 'blue': return "bg-sky-50/80 border-sky-100/50 text-sky-900";
-            case 'purple': return "bg-indigo-50/80 border-indigo-100/50 text-indigo-900";
+            case 'green': return "bg-emerald-100/80 border-emerald-200 text-emerald-950 shadow-sm";
+            case 'pink': return "bg-rose-100/80 border-rose-200 text-rose-950 shadow-sm";
+            case 'gray': return "bg-slate-100 border-slate-200 text-slate-600";
+            case 'orange': return "bg-amber-100/80 border-amber-200 text-amber-950 shadow-sm";
+            case 'blue': return "bg-sky-100/80 border-sky-200 text-sky-950 shadow-sm";
+            case 'purple': return "bg-indigo-100/80 border-indigo-200 text-indigo-950 shadow-sm";
             default: return "bg-slate-50 border-slate-100 text-slate-400";
         }
     };
 
-    const getDotColor = (color: string) => {
+    const getDotColor = (color: string, isClosed?: boolean) => {
+        if (isClosed) return "bg-slate-300";
         switch (color) {
-            case 'green': return "bg-emerald-400";
-            case 'pink': return "bg-rose-400";
-            case 'gray': return "bg-slate-300";
-            case 'orange': return "bg-amber-400";
-            case 'blue': return "bg-sky-400";
-            case 'purple': return "bg-indigo-400";
+            case 'green': return "bg-emerald-500";
+            case 'pink': return "bg-rose-500";
+            case 'gray': return "bg-slate-400";
+            case 'orange': return "bg-amber-500";
+            case 'blue': return "bg-sky-500";
+            case 'purple': return "bg-indigo-500";
             default: return "bg-slate-300";
         }
     };
@@ -148,67 +154,80 @@ export const FacilityCalendarModal: React.FC<FacilityCalendarModalProps> = ({ fa
                             ))}
                             {schedule.map((day) => {
                                 const isCurrentDay = isToday(day.date);
-
-                                // Custom Logic for University Events
-                                let colorClass, dotClass;
-                                if (facilityId === 'university_events') {
-                                    if (day.info.note) {
-                                        if (day.info.note.includes('履修') || day.info.note.includes('成績')) {
-                                            // Highlight "Registration" & "Grade Inquiry" events (Orange/Amber)
-                                            colorClass = "bg-amber-50/90 border-amber-200 text-amber-900";
-                                            dotClass = "bg-amber-500";
-                                        } else {
-                                            // All other events (Uniform Blue/Indigo)
-                                            colorClass = "bg-indigo-50/80 border-indigo-100/50 text-indigo-900";
-                                            dotClass = "bg-indigo-400";
-                                        }
-                                    } else {
-                                        // Empty days
-                                        colorClass = "bg-slate-50 border-slate-100 text-slate-400";
-                                        dotClass = "bg-slate-300 hidden"; // Hide dot for empty days
-                                    }
-                                } else {
-                                    // Standard Logic
-                                    colorClass = getColorClasses(day.info.color || 'gray');
-                                    dotClass = getDotColor(day.info.color || 'gray');
-                                }
-
                                 const isSelected = isSameDay(day.date, currentDate);
+                                const colorClass = getColorClasses(day.info.color || 'gray', day.info.isClosed);
+                                const dotClass = getDotColor(day.info.color || 'gray', day.info.isClosed);
 
                                 return (
                                     <button
                                         key={day.date.toISOString()}
                                         onClick={() => setCurrentDate(day.date)}
                                         className={cn(
-                                            "min-h-[60px] p-1.5 rounded-lg border text-xs relative flex flex-col transition-all text-left",
+                                            "min-h-[50px] p-1.5 rounded-lg border text-xs relative flex flex-col transition-all text-left",
                                             isCurrentDay && "ring-2 ring-accent ring-offset-1 z-10",
                                             isSelected && "ring-2 ring-indigo-500 ring-offset-1 z-10",
                                             !isCurrentDay && !isSelected && "hover:ring-2 hover:ring-black/5 hover:z-10",
                                             colorClass
                                         )}
                                     >
-                                        <div className="flex justify-between items-start mb-0.5 w-full">
+                                        <div className="flex justify-between items-start w-full">
                                             <span className={cn(
                                                 "font-bold text-sm",
                                                 isCurrentDay && "text-accent"
                                             )}>
                                                 {format(day.date, 'd')}
                                             </span>
-                                            {/* Status Dot */}
                                             <div className={cn(
                                                 "w-2 h-2 rounded-full shrink-0 mt-1",
                                                 dotClass
                                             )} />
                                         </div>
-
-                                        <div className="flex-1 flex flex-col justify-end w-full min-h-0">
-                                            <p className="font-bold leading-tight text-[10px] truncate">
-                                                {day.info.hours}
-                                            </p>
-                                        </div>
                                     </button>
                                 );
                             })}
+                        </div>
+
+                        {/* Dynamic Legend */}
+                        <div className="mt-4 pt-3 border-t border-slate-50 flex flex-wrap justify-center gap-x-4 gap-y-2">
+                            {(() => {
+                                // Collect unique hours for open days
+                                const items = schedule.reduce((acc, day) => {
+                                    if (day.info.isClosed) return acc;
+                                    const key = `${day.info.color}-${day.info.hours}`;
+                                    if (!acc.find(i => i.key === key)) {
+                                        acc.push({
+                                            key,
+                                            color: day.info.color,
+                                            hours: day.info.hours,
+                                            isStandard: day.info.scheduleType === 'standard'
+                                        });
+                                    }
+                                    return acc;
+                                }, [] as { key: string; color: string; hours: string; isStandard: boolean }[]);
+
+                                // Sort: standard (green) first
+                                items.sort((a, b) => (a.isStandard ? -1 : b.isStandard ? 1 : 0));
+
+                                return (
+                                    <>
+                                        {items.map(item => (
+                                            <div key={item.key} className="flex items-center gap-1.5">
+                                                <div className={cn("w-3 h-3 rounded-full", getDotColor(item.color))} />
+                                                <span className="text-[10px] font-bold text-calm-subtext">
+                                                    {formatHours(item.hours)}
+                                                    {item.isStandard && (language === 'ja' ? ' (通常)' : ' (Regular)')}
+                                                </span>
+                                            </div>
+                                        ))}
+                                        <div className="flex items-center gap-1.5">
+                                            <div className="w-3 h-3 rounded-full bg-slate-300" />
+                                            <span className="text-[10px] font-bold text-calm-subtext">
+                                                {t('status.closed')}
+                                            </span>
+                                        </div>
+                                    </>
+                                );
+                            })()}
                         </div>
 
                     </div>

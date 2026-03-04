@@ -178,6 +178,7 @@ export const CONST_SCHEDULE_DATA: Record<FacilityId, FacilityData> = {
             Rules.date('2026-03-31', times('09:00', '17:00')),
 
             // Exceptions: Apr 2026
+            Rules.date('2026-04-29', HO.DEFAULT, '昭和の日'),
             Rules.date('2026-04-30', times('09:00', '17:00')),
 
             // Dynamic Holidays (Closed on national holidays)
@@ -228,21 +229,20 @@ export const CONST_SCHEDULE_DATA: Record<FacilityId, FacilityData> = {
             Rules.range('2026-02-26', '2026-02-27', times('11:30', '13:00')),
             Rules.closedDate('2026-02-28', '定休日'),
 
-            // March 2026
-            Rules.closedDate('2026-03-01', '定休日'),
-            Rules.range('2026-03-02', '2026-03-06', [], '営業時間未定'),
+            // March 2026 (Based on Official Calendar Image)
+            Rules.closedRange('2026-03-01', '2026-03-01', '定休日'),
+            Rules.range('2026-03-02', '2026-03-06', times('11:30', '13:00')),
             Rules.closedRange('2026-03-07', '2026-03-08', '定休日'),
-            Rules.range('2026-03-09', '2026-03-10', [], '営業時間未定'),
-            Rules.closedRange('2026-03-11', '2026-03-12', '後期日程試験（入構制限）'),
-            Rules.date('2026-03-13', [], '営業時間未定'),
+            Rules.range('2026-03-09', '2026-03-10', times('11:30', '13:00')),
+            Rules.closedRange('2026-03-11', '2026-03-12', '休業'),
+            Rules.range('2026-03-13', '2026-03-13', times('11:30', '13:00')),
             Rules.closedRange('2026-03-14', '2026-03-15', '定休日'),
-            Rules.date('2026-03-16', [], '営業時間未定'), // ミック? User provided '16日 1階食堂ミック' but likely typo for ミール or switch? Assuming Meal based on context. Wait, user provided "2026-03-16,1階食堂ミック,営業,不明" for Meal section. That's likely 'Meal'.
-            Rules.range('2026-03-17', '2026-03-19', [], '営業時間未定'),
-            Rules.date('2026-03-20', times('11:00', '13:30'), '卒業式'),
+            Rules.range('2026-03-16', '2026-03-19', times('11:30', '13:00')),
+            Rules.date('2026-03-20', times('11:00', '13:30')),
             Rules.closedRange('2026-03-21', '2026-03-22', '定休日'),
-            Rules.range('2026-03-23', '2026-03-27', [], '営業時間未定'),
+            Rules.range('2026-03-23', '2026-03-27', times('11:30', '13:00')),
             Rules.closedRange('2026-03-28', '2026-03-29', '定休日'),
-            Rules.range('2026-03-30', '2026-03-31', [], '営業時間未定'),
+            Rules.range('2026-03-30', '2026-03-31', times('11:30', '13:00')),
 
             // April 2026
             Rules.range('2026-04-01', '2026-04-03', HO.LUNCH_SHORT, '短縮営業'),
@@ -329,18 +329,18 @@ export const CONST_SCHEDULE_DATA: Record<FacilityId, FacilityData> = {
 
             // March 2026
             Rules.closedDate('2026-03-01', '定休日'),
-            Rules.range('2026-03-02', '2026-03-06', [], '営業時間未定'),
+            Rules.range('2026-03-02', '2026-03-06', times('11:30', '13:00'), '短縮営業'),
             Rules.closedRange('2026-03-07', '2026-03-08', '定休日'),
-            Rules.range('2026-03-09', '2026-03-11', [], '営業時間未定'),
-            Rules.closedDate('2026-03-12', '後期日程試験（入構制限）'), // Matches offline? 12th is closed for store in user list. 11th Open? User: 11 Open, 12 Closed.
-            Rules.date('2026-03-13', [], '営業時間未定'),
+            Rules.range('2026-03-09', '2026-03-10', times('11:30', '13:00'), '短縮営業'),
+            Rules.closedRange('2026-03-11', '2026-03-12', '休業'),
+            Rules.date('2026-03-13', times('11:30', '13:00'), '短縮営業'),
             Rules.closedRange('2026-03-14', '2026-03-15', '定休日'),
-            Rules.range('2026-03-16', '2026-03-19', [], '営業時間未定'),
+            Rules.range('2026-03-16', '2026-03-19', times('11:30', '13:00'), '短縮営業'),
             Rules.date('2026-03-20', times('11:00', '16:30'), '卒業式'),
             Rules.closedRange('2026-03-21', '2026-03-22', '定休日'),
-            Rules.range('2026-03-23', '2026-03-27', [], '営業時間未定'),
+            Rules.range('2026-03-23', '2026-03-27', times('11:30', '13:00'), '短縮営業'),
             Rules.closedRange('2026-03-28', '2026-03-29', '定休日'),
-            Rules.range('2026-03-30', '2026-03-31', [], '営業時間未定'),
+            Rules.range('2026-03-30', '2026-03-31', times('11:30', '13:00'), '短縮営業'),
 
             // April 2026
             Rules.range('2026-04-01', '2026-04-03', times('11:00', '14:00'), '短縮営業'),

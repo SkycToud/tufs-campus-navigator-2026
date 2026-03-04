@@ -209,7 +209,8 @@ export interface DailyInfo {
     scheduleType: ScheduleType;
     hours: string; // e.g. "9:00-20:00" or simple text like "Closed"
     note?: string;
-    color: 'green' | 'pink' | 'gray' | 'orange' | 'blue' | 'purple'; // Added custom colors
+    color: 'green' | 'pink' | 'gray' | 'orange' | 'blue' | 'purple'; // Unified colors
+    isClosed: boolean;
 }
 
 export function getFacilityDailyInfo(
@@ -229,7 +230,8 @@ export function getFacilityDailyInfo(
                 scheduleType: 'closed',
                 hours: t('status.closed'), // or exception.reason
                 note: exception.reason ? t(exception.reason) : undefined,
-                color: 'gray'
+                color: 'gray',
+                isClosed: true
             };
         }
         // If exception is open, it's irregular
@@ -239,7 +241,8 @@ export function getFacilityDailyInfo(
                 scheduleType: 'irregular',
                 hours: hoursText,
                 note: exception.reason ? t(exception.reason) : undefined,
-                color: 'pink'
+                color: 'pink',
+                isClosed: false
             };
         }
     }
@@ -301,7 +304,8 @@ export function getFacilityDailyInfo(
             scheduleType: 'closed',
             hours: t(closedTextKey),
             note: matchedRule?.note ? t(matchedRule.note) : undefined,
-            color: 'gray'
+            color: 'gray',
+            isClosed: true
         };
     }
 
@@ -350,10 +354,30 @@ export function getFacilityDailyInfo(
         else color = 'gray';
     }
 
+    // Custom logic for University Events
+    if (facilityId === 'university_events') {
+        if (matchedRule.note) {
+            if (matchedRule.note.includes('履修') || matchedRule.note.includes('成績') || matchedRule.note.includes('成果')) {
+                color = 'orange'; // Registration/Grades
+            } else {
+                color = 'blue'; // Other events
+            }
+        } else {
+            return {
+                scheduleType: 'closed', // Empty days are treated as closed/no event
+                hours: '',
+                note: undefined,
+                color: 'gray',
+                isClosed: true
+            };
+        }
+    }
+
     return {
         scheduleType,
         hours: hoursText,
         note: matchedRule.note ? t(matchedRule.note) : undefined,
-        color
+        color,
+        isClosed: false
     };
 }
