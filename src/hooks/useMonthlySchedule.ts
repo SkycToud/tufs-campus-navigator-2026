@@ -26,7 +26,8 @@ export function useMonthlySchedule(facilityId: FacilityId, month: Date): DailySc
                     scheduleType: 'closed',
                     hours: 'Maintenance',
                     note: 'System Maintenance',
-                    color: 'gray'
+                    color: 'gray',
+                    isClosed: true
                 }
             };
         }
