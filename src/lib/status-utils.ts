@@ -316,16 +316,19 @@ export function getFacilityDailyInfo(
 
     const hoursText = matchedRule.hours.map(h => `${h.start}-${h.end}`).join(', ');
 
-    // Determine base type
-    const scheduleType: ScheduleType = (ruleType === 'weekday') ? 'standard' : 'irregular';
-    let color: DailyInfo['color'] = scheduleType === 'standard' ? 'green' : 'pink';
+    // Determine base type - consider repeating weekday/specific weekday rules as standard
+    const isStandardRule = ruleType === 'weekday' || ruleType === 'wednesday' || ruleType === 'saturday' || ruleType === 'sunday';
+    const scheduleType: ScheduleType = isStandardRule ? 'standard' : 'irregular';
+    let color: DailyInfo['color'] = isStandardRule ? 'green' : 'pink';
 
     // Custom logic for Store (Hatchpotch)
     if (facilityId === 'store') {
-        if (hoursText === '11:00-16:30') color = 'green';       // Standard
-        else if (hoursText === '11:00-15:00') color = 'orange'; // Short A
-        else if (hoursText === '11:30-13:00') color = 'blue';   // Winter
-        else if (hoursText === '11:30-14:30') color = 'purple'; // Exam
+        if (hoursText === '10:00-16:30' || hoursText === '11:00-16:30') color = 'green'; // Standard
+        else if (hoursText === '10:00-15:00') color = 'blue';   // Standard Wed
+        else if (hoursText === '11:00-15:00') color = 'orange'; // Saturday/Short
+        else if (hoursText === '11:00-14:00') color = 'purple'; // April Short
+        else if (hoursText === '11:30-13:00') color = 'blue';   // Winter (old)
+        else if (hoursText === '11:30-14:30') color = 'purple'; // Exam (old)
         else color = 'pink'; // Fallback for other irregulars
     }
 
