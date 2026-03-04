@@ -137,17 +137,14 @@ const UNIVERSITY_EVENTS_RULES: ScheduleRule[] = [
     Rules.date('2026-03-31', [], '学年終わり'),
 
     // April 2026
-    Rules.date('2026-04-01', [], '新入生オリエンテーション（履修ガイダンス） / 春学期開始'),
-    Rules.range('2026-04-01', '2026-04-03', [], 'GLIP英語科目抽選登録期間'),
-    Rules.range('2026-04-01', '2026-04-06', [], '教養外国語科目抽選登録期間'),
-    Rules.date('2026-04-02', [], '入学時定期健康診断'),
-    Rules.date('2026-04-03', [], '（在学生）定期健康診断'),
-    Rules.date('2026-04-04', [], '入学式'),
-    Rules.date('2026-04-05', [], '新入生歓迎行事'),
-    Rules.date('2026-04-06', [], '（在学生）定期健康診断'),
-    Rules.date('2026-04-07', [], '履修相談コーナー'),
-    Rules.range('2026-04-07', '2026-04-14', [], '履修登録期間（全科目）'),
-    Rules.date('2026-04-08', [], '春学期授業開始'),
+    Rules.date('2026-04-01', [], '新入生オリエンテーション（履修ガイダンス） / 春学期開始 / GLIP･教養外国語科目 抽選登録開始'),
+    Rules.date('2026-04-02', [], '入学時定期健康診断 / GLIP･教養外国語科目 抽選登録期間'),
+    Rules.date('2026-04-03', [], '（在学生）定期健康診断 / GLIP英語科目 抽選登録締切 / 教養外国語科目 抽選登録期間'),
+    Rules.date('2026-04-04', [], '入学式 / 教養外国語科目 抽選登録期間'),
+    Rules.date('2026-04-05', [], '新入生歓迎行事 / 教養外国語科目 抽選登録期間'),
+    Rules.date('2026-04-06', [], '（在学生）定期健康診断 / 教養外国語科目 抽選登録締切'),
+    Rules.date('2026-04-07', [], '履修相談コーナー / 履修登録期間（全科目）開始'),
+    Rules.range('2026-04-08', '2026-04-14', [], '春学期授業開始 / 履修登録期間（全科目）'),
     Rules.date('2026-08-04', [], '春学期終了'),
     Rules.date('2026-08-05', [], '夏学期開始'),
     Rules.date('2026-09-27', [], '夏学期終了'),
@@ -371,7 +368,7 @@ export const CONST_SCHEDULE_DATA: Record<FacilityId, FacilityData> = {
 
             // Fallbacks (New Standard from April 2026)
             Rules.weekday(times('10:00', '16:30')),
-            { ...Rules.subWeekday('wednesday', times('10:00', '15:00')), note: '短縮営業' },
+            Rules.subWeekday('wednesday', times('10:00', '15:00')),
             Rules.subWeekday('saturday', [], true),
             Rules.subWeekday('sunday', [], true),
         ]
