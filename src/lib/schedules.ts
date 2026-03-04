@@ -136,6 +136,19 @@ const UNIVERSITY_EVENTS_RULES: ScheduleRule[] = [
     Rules.date('2026-03-20', [], '卒業式（学位記授与式）'),
     Rules.date('2026-03-31', [], '学年終わり'),
 
+    // April 2026
+    Rules.date('2026-04-01', [], '新入生オリエンテーション（履修ガイダンス）'),
+    Rules.range('2026-04-01', '2026-04-03', [], 'GLIP英語科目抽選登録期間'),
+    Rules.range('2026-04-01', '2026-04-06', [], '教養外国語科目抽選登録期間'),
+    Rules.date('2026-04-02', [], '入学時定期健康診断'),
+    Rules.date('2026-04-03', [], '（在学生）定期健康診断'),
+    Rules.date('2026-04-04', [], '入学式'),
+    Rules.date('2026-04-05', [], '新入生歓迎行事'),
+    Rules.date('2026-04-06', [], '（在学生）定期健康診断'),
+    Rules.date('2026-04-07', [], '履修相談コーナー'),
+    Rules.range('2026-04-07', '2026-04-14', [], '履修登録期間（全科目）'),
+    Rules.date('2026-04-08', [], '春学期授業開始'),
+
     // Fallbacks
     Rules.weekday([], ''),
     Rules.subWeekday('saturday', [], false),
@@ -360,7 +373,7 @@ export const CONST_SCHEDULE_DATA: Record<FacilityId, FacilityData> = {
         name: '教務・学生・留学生課',
         nameEn: 'Academic, Student & International Student Affairs',
         category: 'admin',
-        unpublishedFrom: '2026-04-01',
+        unpublishedFrom: '2026-05-01',
         rules: [
             ...COMMON_ADMIN_RULES,
             Rules.weekday(HO.ADMIN_LUNCH, '昼休み 12:40-13:40'),
@@ -370,7 +383,7 @@ export const CONST_SCHEDULE_DATA: Record<FacilityId, FacilityData> = {
         name: '入試課',
         nameEn: 'Admissions',
         category: 'admin',
-        unpublishedFrom: '2026-04-01',
+        unpublishedFrom: '2026-05-01',
         rules: [
             ...COMMON_ADMIN_RULES,
             Rules.weekday(HO.ADMISSION_LUNCH, '昼休み 12:00-13:00'),
@@ -380,7 +393,7 @@ export const CONST_SCHEDULE_DATA: Record<FacilityId, FacilityData> = {
         name: '会計課',
         nameEn: 'Accounting Division',
         category: 'admin',
-        unpublishedFrom: '2026-04-01',
+        unpublishedFrom: '2026-05-01',
         rules: [
             ...COMMON_ADMIN_RULES,
             Rules.weekday(HO.ADMIN_STD, '現金受付は15:00まで'),
@@ -390,7 +403,7 @@ export const CONST_SCHEDULE_DATA: Record<FacilityId, FacilityData> = {
         name: '証明書発行機',
         nameEn: 'Certificate Machine',
         category: 'facility',
-        unpublishedFrom: '2026-04-01',
+        unpublishedFrom: '2026-05-01',
         rules: [
             ...COMMON_ADMIN_RULES,
             Rules.weekday(times('09:00', '17:00')),
@@ -400,7 +413,7 @@ export const CONST_SCHEDULE_DATA: Record<FacilityId, FacilityData> = {
         name: 'サークル棟',
         nameEn: 'Circle Building',
         category: 'facility',
-        unpublishedFrom: '2026-04-01',
+        unpublishedFrom: '2026-05-01',
         rules: [
             ...RESTRICTED_ENTRY_RULES,
             Rules.weekday(HO.EARLY_LATE),
@@ -412,7 +425,7 @@ export const CONST_SCHEDULE_DATA: Record<FacilityId, FacilityData> = {
         name: '研究講義棟',
         nameEn: 'Research & Lecture Bldg',
         category: 'facility',
-        unpublishedFrom: '2026-04-01',
+        unpublishedFrom: '2026-05-01',
         rules: [
             ...RESTRICTED_ENTRY_RULES, // <--- Injection Point
             Rules.closedRange('2026-01-01', '2026-01-04', '年始休業'),
@@ -447,7 +460,7 @@ export const CONST_SCHEDULE_DATA: Record<FacilityId, FacilityData> = {
         name: 'グローバル・キャリア・センター',
         nameEn: 'Global Career Center',
         category: 'facility',
-        unpublishedFrom: '2026-04-01',
+        unpublishedFrom: '2026-05-01',
         rules: [
             ...RESTRICTED_ENTRY_RULES, // Sync with Lecture Bldg restrictions
             ...COMMON_ADMIN_RULES,
@@ -461,7 +474,7 @@ export const CONST_SCHEDULE_DATA: Record<FacilityId, FacilityData> = {
         name: 'TUFS Academic Support Center（たふさぽ）',
         nameEn: 'TUFS Academic Support Center',
         category: 'facility',
-        unpublishedFrom: '2026-04-01',
+        unpublishedFrom: '2026-05-01',
         rules: [
             ...RESTRICTED_ENTRY_RULES, // Sync with Lecture Bldg restrictions
             ...COMMON_ADMIN_RULES,
@@ -472,7 +485,7 @@ export const CONST_SCHEDULE_DATA: Record<FacilityId, FacilityData> = {
         name: 'アゴラ・グローバル',
         nameEn: 'Agora Global',
         category: 'facility',
-        unpublishedFrom: '2026-04-01',
+        unpublishedFrom: '2026-05-01',
         rules: [
             ...RESTRICTED_ENTRY_RULES,
             Rules.weekday(HO.EARLY_LATE),
@@ -484,7 +497,7 @@ export const CONST_SCHEDULE_DATA: Record<FacilityId, FacilityData> = {
         name: 'カフェ・カスタリア',
         nameEn: 'Cafe Castalia',
         category: 'facility',
-        unpublishedFrom: '2026-04-01',
+        unpublishedFrom: '2026-05-01',
         rules: [
             Rules.weekday(times('11:00', '17:00')),
             Rules.subWeekday('saturday', [], true),
@@ -495,7 +508,7 @@ export const CONST_SCHEDULE_DATA: Record<FacilityId, FacilityData> = {
         name: '本部管理棟',
         nameEn: 'Administration Building',
         category: 'admin',
-        unpublishedFrom: '2026-04-01',
+        unpublishedFrom: '2026-05-01',
         rules: [
             // Exceptions: New Year
             Rules.closedRange('2026-01-01', '2026-01-04', '年始休業'),
@@ -516,7 +529,7 @@ export const CONST_SCHEDULE_DATA: Record<FacilityId, FacilityData> = {
         name: '大学行事予定',
         nameEn: 'University Events',
         category: 'facility',
-        unpublishedFrom: '2026-04-01',
+        unpublishedFrom: '2026-05-01',
         rules: UNIVERSITY_EVENTS_RULES
     }
 };
