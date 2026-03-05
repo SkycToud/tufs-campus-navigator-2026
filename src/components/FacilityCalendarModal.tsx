@@ -210,19 +210,36 @@ export const FacilityCalendarModal: React.FC<FacilityCalendarModalProps> = ({ fa
 
                                 return (
                                     <>
-                                        {items.map(item => (
-                                            <div key={item.key} className="flex items-center gap-1.5">
-                                                <div className={cn("w-3 h-3 rounded-full", getDotColor(item.color))} />
-                                                <span className="text-[10px] font-bold text-calm-subtext">
-                                                    {formatHours(item.hours)}
-                                                    {item.isStandard && (language === 'ja' ? ' (通常)' : ' (Regular)')}
-                                                </span>
-                                            </div>
-                                        ))}
+                                        {items.map(item => {
+                                            let label = formatHours(item.hours);
+                                            if (item.isStandard) {
+                                                label += language === 'ja' ? ' (通常)' : ' (Regular)';
+                                            }
+
+                                            // Custom labels for University Events
+                                            if (validFacilityId === 'university_events') {
+                                                if (item.color === 'orange') {
+                                                    label = language === 'ja' ? '履修関係' : 'Registration';
+                                                } else if (item.color === 'blue') {
+                                                    label = language === 'ja' ? 'その他' : 'Others';
+                                                }
+                                            }
+
+                                            return (
+                                                <div key={item.key} className="flex items-center gap-1.5">
+                                                    <div className={cn("w-3 h-3 rounded-full", getDotColor(item.color))} />
+                                                    <span className="text-[10px] font-bold text-calm-subtext">
+                                                        {label}
+                                                    </span>
+                                                </div>
+                                            );
+                                        })}
                                         <div className="flex items-center gap-1.5">
                                             <div className="w-3 h-3 rounded-full bg-slate-300" />
                                             <span className="text-[10px] font-bold text-calm-subtext">
-                                                {t('status.closed')}
+                                                {validFacilityId === 'university_events'
+                                                    ? (language === 'ja' ? '予定なし' : 'No events')
+                                                    : t('status.closed')}
                                             </span>
                                         </div>
                                     </>
